@@ -1,0 +1,8251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CRIMSON HERITAGE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: rgba(18,18,18,.88);
+      --panel2: rgba(28,28,28,.72);
+      --red: #b5121b;
+      --red2: #e32631;
+      --gold: #c9a45c;
+      --text: #f5f5f5;
+      --muted: #929292;
+      --border: rgba(255,255,255,.08);
+      --green: #37c978;
+      --yellow: #e5b94d;
+      --danger: #ef4d5a;
+      --sidebar: 250px;
+    }
+
+    * {
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: #5d5d5d transparent;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* ==================================================
+       BACKGROUND - CRIMSON STAR WATERMARK
+    ================================================== */
+
+    body {
+      position: relative;
+      background: #050505;
+    }
+
+    /* Logo/bintang merah besar di belakang dashboard.
+       mix-blend-mode: screen membuat bagian hitam dari gambar
+       menyatu dengan background sehingga yang menonjol adalah emblemnya. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E")
+        center 52% / min(620px, 55vw) auto no-repeat;
+      opacity: .34;
+      mix-blend-mode: screen;
+      filter: saturate(1.35) drop-shadow(0 0 35px rgba(181,18,27,.35));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Lapisan gelap supaya dashboard tetap mudah dibaca. */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(181,18,27,.07), transparent 34%),
+        linear-gradient(rgba(0,0,0,.66), rgba(0,0,0,.78));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Konten harus berada di atas watermark. */
+    #app,
+    #loginPage {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==================================================
+       LOADER
+    ================================================== */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(181,18,27,.12),
+          transparent 32%
+        ),
+        linear-gradient(
+          rgba(0,0,0,.90),
+          rgba(0,0,0,.97)
+        ),
+        url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E")
+        center / 360px auto no-repeat;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      transition: opacity .5s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-logo {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+      animation: pulse 2s infinite;
+      filter: drop-shadow(0 0 30px rgba(181,18,27,.45));
+    }
+
+    .loader-title {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 5px;
+    }
+
+    .loader-subtitle {
+      margin-top: 8px;
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+
+    .loader-line {
+      width: 180px;
+      height: 2px;
+      margin-top: 25px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .loader-line::after {
+      content: "";
+      display: block;
+      width: 45%;
+      height: 100%;
+      background: var(--red2);
+      animation: loading 1.2s infinite;
+    }
+
+    @keyframes loading {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(320%); }
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.05);
+        opacity: .75;
+      }
+    }
+
+    /* ==================================================
+       LOGIN
+    ================================================== */
+
+    #loginPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: min(430px, 100%);
+      padding: 38px;
+      border: 1px solid var(--border);
+      background: rgba(10,10,10,.82);
+      backdrop-filter: blur(22px);
+      border-radius: 24px;
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.65),
+        0 0 50px rgba(181,18,27,.08);
+    }
+
+    .login-logo {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 18px;
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 3px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      margin-top: 7px;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    .login-form {
+      margin-top: 30px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      outline: none;
+      background: rgba(255,255,255,.045);
+      color: white;
+      border-radius: 12px;
+      padding: 13px 14px;
+      transition: .2s;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(181,18,27,.75);
+      box-shadow: 0 0 0 3px rgba(181,18,27,.09);
+    }
+
+    select option {
+      background: #161616;
+      color: white;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 16px;
+      color: white;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red), #720a10);
+      box-shadow: 0 8px 30px rgba(181,18,27,.2);
+    }
+
+    .btn-red {
+      background: var(--red);
+    }
+
+    .btn-gold {
+      background: #765a27;
+    }
+
+    .btn-green {
+      background: #176c42;
+    }
+
+    .btn-danger {
+      background: #76202a;
+    }
+
+    .btn-muted {
+      background: #292929;
+    }
+
+    .login-error {
+      display: none;
+      margin-bottom: 15px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: rgba(239,77,90,.1);
+      border: 1px solid rgba(239,77,90,.2);
+      color: #ff7e88;
+      font-size: 12px;
+    }
+
+    /* ==================================================
+       APP
+    ================================================== */
+
+    #app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: var(--sidebar);
+      background: rgba(7,7,7,.92);
+      backdrop-filter: blur(18px);
+      border-right: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      padding: 23px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .brand-role {
+      color: var(--gold);
+      margin-top: 5px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    .nav {
+      padding: 14px 10px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .nav-section {
+      color: #626262;
+      font-size: 9px;
+      letter-spacing: 2px;
+      margin: 15px 10px 7px;
+    }
+
+    .nav-item {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #a8a8a8;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,.045);
+      color: white;
+    }
+
+    .nav-item.active {
+      color: white;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(181,18,27,.25),
+          rgba(181,18,27,.04)
+        );
+      border-left: 2px solid var(--red2);
+    }
+
+    .sidebar-bottom {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .profile-mini {
+      padding: 11px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,.035);
+      border-radius: 10px;
+    }
+
+    .profile-mini-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .profile-mini-role {
+      color: var(--gold);
+      font-size: 9px;
+      margin-top: 4px;
+    }
+
+    .logout {
+      width: 100%;
+      background: rgba(181,18,27,.12);
+      border: 1px solid rgba(181,18,27,.2);
+      color: #ff737b;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .main {
+      margin-left: var(--sidebar);
+      min-height: 100vh;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 15px;
+    }
+
+    .page-title {
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    /* ==================================================
+       CARDS
+    ================================================== */
+
+    .grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 19px;
+      backdrop-filter: blur(16px);
+    }
+
+    .stat-label {
+      color: #8c8c8c;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .stat-value {
+      margin-top: 9px;
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .stat-red {
+      color: #ed4b55;
+    }
+
+    .stat-green {
+      color: #4bd58c;
+    }
+
+    .stat-gold {
+      color: var(--gold);
+    }
+
+    /* ==================================================
+       STOCK
+    ================================================== */
+
+    .section-title {
+      margin: 28px 0 13px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    .item-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 205px;
+      padding: 18px;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018) 55%, rgba(181,18,27,.035));
+      border-color: rgba(255,255,255,.075);
+      box-shadow: 0 10px 35px rgba(0,0,0,.18);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+    }
+
+    .item-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--gold), transparent);
+      opacity: .9;
+    }
+
+    .item-card::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      right: -45px;
+      top: -45px;
+      border-radius: 50%;
+      background: rgba(181,18,27,.10);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(201,164,92,.28);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.022) 55%, rgba(181,18,27,.055));
+      box-shadow: 0 16px 42px rgba(0,0,0,.32);
+    }
+
+    .item-top {
+      display:grid;
+      grid-template-columns:34px minmax(0, 1fr);
+      align-items:start;
+      gap:10px;
+      position:relative;
+      z-index:1;
+      min-width:0;
+    }
+
+    .item-top .status {
+      position:absolute;
+      top:5px;
+      right:0;
+      margin-top:0;
+      max-width:92px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .item-icon {
+      width:34px;
+      height:34px;
+      flex:0 0 34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:11px;
+      background:rgba(181,18,27,.13);
+      border:1px solid rgba(181,18,27,.2);
+      color:#e34a52;
+      font-size:15px;
+    }
+
+    .item-name {
+      min-width:0;
+      padding-right:86px;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:850;
+      color:#f3f3f3;
+      letter-spacing:.15px;
+      overflow-wrap:normal;
+      word-break:normal;
+      hyphens:none;
+    }
+
+    .item-stock-label {
+      margin-top:18px;
+      color:#777;
+      font-size:8px;
+      font-weight:800;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      position:relative;
+      z-index:1;
+    }
+
+    .item-stock {
+      font-size:31px;
+      line-height:1;
+      font-weight:950;
+      margin-top:6px;
+      letter-spacing:-.7px;
+      position:relative;
+      z-index:1;
+    }
+
+    .item-stock-unit {
+      color:#777;
+      font-size:9px;
+      font-weight:700;
+      margin-left:5px;
+      letter-spacing:.3px;
+    }
+
+    .item-min {
+      color:#929292;
+      font-size:9px;
+      margin-top:8px;
+      position:relative;
+      z-index:1;
+    }
+
+    .item-footer {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .item-edit {
+      flex:1;
+      min-height:32px;
+      padding:7px 10px !important;
+      border-radius:10px !important;
+      font-size:9px !important;
+      letter-spacing:.4px;
+      transition:.2s ease;
+    }
+
+    .item-edit:hover {
+      border-color:rgba(201,164,92,.28);
+      color:#fff;
+    }
+
+    .stock-toolbar {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:13px;
+      margin-bottom:15px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(18,18,18,.72);
+      box-shadow:0 10px 30px rgba(0,0,0,.14);
+      backdrop-filter:blur(14px);
+    }
+
+    .stock-search-wrap {
+      flex:1;
+      min-width:230px;
+      position:relative;
+    }
+
+    .stock-search-icon {
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#888;
+      font-size:13px;
+      pointer-events:none;
+    }
+
+    .stock-search {
+      width:100%;
+      min-width:0;
+      border:1px solid var(--border);
+      outline:none;
+      background:rgba(255,255,255,.035);
+      color:white;
+      border-radius:11px;
+      padding:12px 14px 12px 38px;
+      transition:.2s;
+    }
+
+    .stock-search::placeholder { color:#707070; }
+    .stock-search:focus { border-color:rgba(181,18,27,.75); box-shadow:0 0 0 3px rgba(181,18,27,.09); background:rgba(255,255,255,.055); }
+
+    .stock-toolbar-info {
+      color:#777;
+      font-size:9px;
+      white-space:nowrap;
+    }
+
+    .stock-count {
+      color:#d0d0d0;
+      font-weight:800;
+    }
+
+    .stock-empty {
+      grid-column:1/-1;
+      text-align:center;
+      padding:42px 20px;
+      color:#777;
+    }
+
+    .stock-empty b { color:#d9d9d9; }
+
+    .status {
+      display: inline-block;
+      margin-top: 13px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: .8px;
+    }
+
+    .available {
+      background: rgba(55,201,120,.11);
+      color: #4be08c;
+    }
+
+    .low {
+      background: rgba(229,185,77,.11);
+      color: #e8c15a;
+    }
+
+    .out {
+      background: rgba(239,77,90,.11);
+      color: #ff6570;
+    }
+
+    /* ==================================================
+       TABLE
+    ================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      background: rgba(255,255,255,.035);
+      color: #858585;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: #d7d7d7;
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,.02);
+    }
+
+    /* ==================================================
+       MODAL
+    ================================================== */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(600px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 30px 100px rgba(0,0,0,.6);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .close {
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 8px;
+      background: #222;
+      color: #aaa;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    /* ==================================================
+       TOAST
+    ================================================== */
+
+    #toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 10000;
+      max-width: 350px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: #191919;
+      border: 1px solid var(--border);
+      box-shadow: 0 15px 50px rgba(0,0,0,.45);
+      font-size: 12px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: .3s;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.error {
+      border-color: rgba(239,77,90,.4);
+    }
+
+    #toast.success {
+      border-color: rgba(55,201,120,.3);
+    }
+
+    /* ==================================================
+       EMPTY
+    ================================================== */
+
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: #666;
+      font-size: 12px;
+    }
+
+
+    /* ==================================================
+       FINANCE
+    ================================================== */
+
+    .finance-toolbar {
+      margin-bottom: 18px;
+    }
+
+    .finance-filter {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .finance-load-btn {
+      height: 42px;
+      white-space: nowrap;
+    }
+
+    .finance-in {
+      color: #4bd58c !important;
+      font-weight: 800;
+    }
+
+    .finance-out {
+      color: #ed4b55 !important;
+      font-weight: 800;
+    }
+
+    .finance-legend {
+      display: flex;
+      gap: 18px;
+      color: #888;
+      font-size: 10px;
+      margin-bottom: 15px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .income-dot { background: #4bd58c; }
+    .expense-dot { background: #ed4b55; }
+
+    .finance-chart {
+      min-height: 155px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 12px 5px 0;
+      overflow-x: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .finance-day {
+      min-width: 34px;
+      height: 145px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .finance-bars {
+      height: 125px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .finance-bar {
+      width: 9px;
+      min-height: 4px;
+      border-radius: 4px 4px 1px 1px;
+    }
+
+    .finance-bar.income { background: #4bd58c; }
+    .finance-bar.expense { background: #ed4b55; }
+
+    .finance-day-label {
+      margin-top: 7px;
+      color: #777;
+      font-size: 8px;
+      white-space: nowrap;
+    }
+
+
+    /* ==================================================
+       SIMPLE DASHBOARD / QUICK ACCESS
+    ================================================== */
+
+    .welcome-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(
+        135deg,
+        rgba(181,18,27,.12),
+        rgba(255,255,255,.025)
+      );
+    }
+
+    .welcome-label {
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 7px;
+    }
+
+    .welcome-title {
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .welcome-desc {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .quick-title {
+      margin-top: 0;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .quick-card {
+      min-height: 88px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      color: #fff;
+      background: rgba(255,255,255,.025);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(181,18,27,.45);
+      background: rgba(181,18,27,.08);
+    }
+
+    .quick-icon {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(181,18,27,.13);
+      color: #ff737b;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .quick-text {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .quick-text strong {
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quick-text small {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+    .quick-arrow {
+      margin-left: auto;
+      color: #666;
+      font-size: 20px;
+    }
+
+    .nav-section {
+      margin-top: 12px;
+      margin-bottom: 5px;
+      padding-left: 9px;
+      font-size: 8px;
+    }
+
+    .nav-item {
+      padding: 10px 11px;
+      margin-bottom: 2px;
+      font-size: 11px;
+      border-radius: 8px;
+    }
+
+    .field-hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* ==================================================
+       PARTNERSHIP
+    ================================================== */
+
+    .partnership-toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:15px;
+    }
+
+    .partnership-list {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .partner-card {
+      cursor:pointer;
+      transition:transform .2s ease,border-color .2s ease,background .2s ease;
+    }
+
+    .partner-card:hover { transform:translateY(-2px); border-color:rgba(181,18,27,.45); }
+    .partner-card.active { border-color:rgba(181,18,27,.7); background:rgba(181,18,27,.09); }
+    .partner-name { color:#f2f2f2; font-weight:800; font-size:13px; letter-spacing:.2px; }
+    .partner-meta { color:var(--muted); font-size:9px; margin-top:6px; }
+
+    .partnership-direction {
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:16px;
+      background:rgba(255,255,255,.018);
+    }
+
+    .partnership-direction h3 { margin:0 0 14px; font-size:12px; letter-spacing:.5px; }
+
+    .credit-watermark {
+      position:fixed;
+      left:var(--sidebar);
+      right:0;
+      bottom:10px;
+      width:calc(100% - var(--sidebar));
+      z-index:40;
+      text-align:center;
+      pointer-events:none;
+      user-select:none;
+      opacity:.34;
+      color:rgba(255,255,255,.58);
+      text-shadow:0 1px 8px rgba(0,0,0,.7);
+      line-height:1.35;
+    }
+    .credit-watermark strong { display:block; font-size:9px; letter-spacing:2.5px; color:rgba(201,164,92,.75); }
+    .credit-watermark span { display:block; font-size:7px; letter-spacing:.35px; }
+
+    /* ==================================================
+       EVENT MANAGEMENT
+    ================================================== */
+
+    .party-layout {
+      align-items: start;
+      width: 100%;
+    }
+
+    .party-table {
+      min-width: 860px;
+    }
+
+    /* ==================================================
+       MOBILE
+    ================================================== */
+
+    @media(max-width: 1200px) {
+
+      .grid-4 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .item-name {
+        padding-right:82px;
+      }
+    }
+
+    @media(max-width: 900px) {
+
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media(max-width: 600px) {
+
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .item-card {
+        min-height: 190px;
+      }
+
+      .item-name {
+        padding-right:78px;
+        font-size:15px;
+      }
+
+      .stock-toolbar {
+        align-items:stretch;
+      }
+
+      .stock-search-wrap {
+        min-width:0;
+        flex-basis:100%;
+      }
+
+      .stock-toolbar-info {
+        flex:1;
+        align-self:center;
+      }
+
+      .stock-toolbar > .btn {
+        width:auto;
+      }
+    }
+
+    @media(max-width: 750px) {
+
+      :root {
+        --sidebar: 0px;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+        transition: .25s;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 17px;
+      }
+
+      .mobile-menu {
+        display: block;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(255,255,255,.04);
+        color: white;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .grid-4,
+      .grid-3,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .page-title {
+        font-size: 20px;
+      }
+
+      .login-card {
+        padding: 28px 20px;
+      }
+
+    }
+
+
+    /* ==================================================
+       GOOGLE SITES EMBED - FINAL RESPONSIVE SIZING
+    ================================================== */
+
+    html,
+    body {
+      width: 100%;
+      min-width: 0;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      box-sizing: border-box;
+    }
+
+    #app,
+    #loginPage {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    .main {
+      width: auto;
+      max-width: none;
+    }
+
+    body {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* LOGIN */
+    #loginPage {
+      min-height: 780px;
+      width: 100%;
+      padding: 34px 24px;
+    }
+
+    .login-card {
+      width: min(520px, calc(100vw - 48px));
+      max-width: 520px;
+      padding: 42px 44px;
+      border-radius: 20px;
+    }
+
+    .login-logo {
+      width: 92px;
+      height: 92px;
+      margin-bottom: 16px;
+    }
+
+    .login-title {
+      font-size: 24px;
+      letter-spacing: 2.5px;
+    }
+
+    .login-subtitle {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+    }
+
+    .login-form {
+      margin-top: 28px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      min-height: 46px;
+      padding: 12px 14px;
+    }
+
+    .btn-primary {
+      min-height: 46px;
+    }
+
+    /* APP LAYOUT */
+    :root {
+      --sidebar: 230px;
+    }
+
+    #app {
+      min-height: 780px;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: var(--sidebar);
+    }
+
+    .brand {
+      padding: 20px 17px;
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 8px;
+    }
+
+    .brand-name {
+      font-size: 14px;
+      letter-spacing: 1.7px;
+    }
+
+    .nav {
+      padding: 12px 9px;
+    }
+
+    .nav-section {
+      margin: 11px 9px 5px;
+      font-size: 8px;
+    }
+
+    .nav-item {
+      padding: 9px 10px;
+      margin-bottom: 2px;
+      gap: 9px;
+      font-size: 11px;
+    }
+
+    .sidebar-bottom {
+      padding: 10px;
+    }
+
+    .profile-mini {
+      padding: 9px;
+      margin-bottom: 7px;
+    }
+
+    .logout {
+      padding: 9px;
+    }
+
+    .main {
+      margin-left: var(--sidebar);
+      min-height: 780px;
+      padding: 24px 28px 32px;
+    }
+
+    .topbar {
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-size: 23px;
+    }
+
+    .page-subtitle {
+      font-size: 10px;
+    }
+
+    /* DASHBOARD */
+    .welcome-card {
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+
+    .welcome-title {
+      font-size: 22px;
+    }
+
+    .quick-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quick-card {
+      min-height: 82px;
+      padding: 13px;
+      gap: 10px;
+    }
+
+    .quick-icon {
+      width: 36px;
+      height: 36px;
+      flex-basis: 36px;
+      font-size: 16px;
+    }
+
+    .quick-text strong {
+      font-size: 11px;
+    }
+
+    .quick-text small {
+      font-size: 8px;
+    }
+
+    /* CONTENT WIDTH / TABLES */
+    .card {
+      padding: 17px;
+      border-radius: 14px;
+    }
+
+    .table-wrap {
+      max-width: 100%;
+    }
+
+    /* TABLET */
+    @media (max-width: 900px) {
+      :root {
+        --sidebar: 210px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* SUBTLE LOGO WATERMARK */
+    @media (max-width: 750px) {
+      body::before {
+        background-size: 330px auto;
+      }
+    }
+
+    /* PHONE / NARROW GOOGLE SITES EMBED */
+    @media (max-width: 750px) {
+      :root {
+        --sidebar: 0px;
+      }
+
+      #loginPage {
+        min-height: 680px;
+        padding: 22px 16px;
+      }
+
+      .login-card {
+        width: min(460px, calc(100vw - 32px));
+        padding: 30px 22px;
+        border-radius: 17px;
+      }
+
+      .login-logo {
+        width: 76px;
+        height: 76px;
+      }
+
+      .login-title {
+        font-size: 20px;
+      }
+
+      .login-subtitle {
+        font-size: 8px;
+      }
+
+      #app {
+        min-height: 680px;
+      }
+
+      .sidebar {
+        width: 260px;
+      }
+
+      .main {
+        min-height: 680px;
+        padding: 16px;
+      }
+
+      .quick-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-card {
+        min-height: 72px;
+      }
+
+      .party-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .party-table {
+        min-width: 780px;
+      }
+
+      .credit-watermark {
+        left: 0;
+        right: 0;
+        width: 100%;
+        bottom: 6px;
+        padding: 0 10px;
+      }
+
+      .credit-watermark strong { font-size:8px; }
+      .credit-watermark span { font-size:6px; }
+    }
+
+  
+
+/* =========================================================
+   CRIMSON HERITAGE — MAFIA / LUXURY DASHBOARD UPGRADE
+   Visual-only layer: existing JS/backend untouched.
+========================================================= */
+
+:root{
+  --mafia-black:#050505;
+  --mafia-panel:rgba(13,13,13,.86);
+  --mafia-red:#a90f19;
+  --mafia-red-bright:#df2632;
+  --mafia-gold:#c8a45b;
+  --mafia-line:rgba(201,164,92,.20);
+  --mafia-white:#f4f1eb;
+}
+
+/* Dashboard welcome = luxury hero */
+.welcome-card{
+  position:relative !important;
+  overflow:hidden !important;
+  min-height:150px !important;
+  padding:30px 34px !important;
+  margin-bottom:24px !important;
+  display:flex !important;
+  align-items:center !important;
+  border:1px solid rgba(201,164,92,.24) !important;
+  border-radius:20px !important;
+  background:
+    radial-gradient(circle at 88% 45%, rgba(181,18,27,.20), transparent 28%),
+    linear-gradient(115deg, rgba(255,255,255,.045), rgba(255,255,255,.012) 55%, rgba(181,18,27,.08)) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.35),
+    inset 0 0 0 1px rgba(255,255,255,.025) !important;
+}
+.welcome-card::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:4px;
+  background:linear-gradient(180deg,var(--mafia-red-bright),var(--mafia-gold),transparent);
+  box-shadow:0 0 22px rgba(181,18,27,.55);
+}
+.welcome-card::after{
+  content:"CH";
+  position:absolute;
+  right:26px;
+  top:50%;
+  transform:translateY(-50%);
+  font-family:Georgia,serif;
+  font-size:92px;
+  font-weight:900;
+  letter-spacing:-8px;
+  color:rgba(201,164,92,.045);
+  pointer-events:none;
+}
+.welcome-label{
+  color:var(--mafia-gold) !important;
+  letter-spacing:3px !important;
+  font-size:9px !important;
+}
+.welcome-title{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:30px !important;
+  letter-spacing:.5px !important;
+  text-shadow:0 3px 20px rgba(0,0,0,.45);
+}
+.welcome-desc{
+  max-width:520px;
+  line-height:1.7 !important;
+}
+
+/* Section title gets a discreet gold rule */
+.quick-title{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+  color:#d9d5ce !important;
+  letter-spacing:2px !important;
+  font-size:10px !important;
+  margin-bottom:13px !important;
+}
+.quick-title::after{
+  content:"";
+  height:1px;
+  flex:1;
+  max-width:220px;
+  background:linear-gradient(90deg,rgba(201,164,92,.38),transparent);
+}
+
+/* Quick-access cards become premium menu tiles */
+.quick-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:14px !important;
+}
+.quick-card{
+  position:relative !important;
+  min-height:108px !important;
+  padding:18px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  border-radius:16px !important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.052),rgba(255,255,255,.012) 65%),
+    rgba(10,10,10,.72) !important;
+  box-shadow:0 12px 35px rgba(0,0,0,.20) !important;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease !important;
+}
+.quick-card::before{
+  content:"";
+  position:absolute;
+  left:0; top:0;
+  width:100%; height:2px;
+  background:linear-gradient(90deg,var(--mafia-red-bright),var(--mafia-gold),transparent);
+  opacity:.65;
+}
+.quick-card::after{
+  content:"";
+  position:absolute;
+  width:110px;height:110px;
+  right:-65px;bottom:-70px;
+  border:1px solid rgba(201,164,92,.12);
+  border-radius:50%;
+  box-shadow:0 0 0 12px rgba(201,164,92,.025),0 0 0 24px rgba(201,164,92,.018);
+  pointer-events:none;
+}
+.quick-card:hover{
+  transform:translateY(-4px) !important;
+  border-color:rgba(201,164,92,.34) !important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(181,18,27,.045) 75%),
+    rgba(10,10,10,.82) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.34),0 0 28px rgba(181,18,27,.08) !important;
+}
+.quick-icon{
+  width:44px !important;
+  height:44px !important;
+  flex-basis:44px !important;
+  border-radius:13px !important;
+  background:linear-gradient(145deg,rgba(181,18,27,.24),rgba(181,18,27,.07)) !important;
+  border:1px solid rgba(181,18,27,.28) !important;
+  color:#f05a62 !important;
+  box-shadow:inset 0 0 18px rgba(181,18,27,.08),0 7px 20px rgba(0,0,0,.18) !important;
+}
+.quick-card:hover .quick-icon{
+  border-color:rgba(201,164,92,.38) !important;
+  color:#e7c77e !important;
+}
+.quick-text strong{
+  font-size:12px !important;
+  letter-spacing:.35px !important;
+}
+.quick-text small{
+  line-height:1.5 !important;
+}
+.quick-arrow{
+  font-size:25px !important;
+  color:#555 !important;
+  transition:.2s ease;
+}
+.quick-card:hover .quick-arrow{
+  color:var(--mafia-gold) !important;
+  transform:translateX(3px);
+}
+
+/* Main dashboard spacing */
+.main{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.008),transparent 25%);
+}
+.topbar{
+  position:relative;
+  padding-bottom:18px;
+  margin-bottom:22px !important;
+}
+.topbar::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(181,18,27,.65),rgba(201,164,92,.18),transparent 80%);
+}
+.page-title{
+  font-family:Georgia,"Times New Roman",serif !important;
+  letter-spacing:.5px;
+}
+.page-subtitle{
+  letter-spacing:1.5px !important;
+  font-size:9px !important;
+}
+
+/* If statistic cards appear on dashboard, give them the same family */
+#content > .grid > .card,
+#content > .grid-4 > .card,
+#content > .grid-3 > .card{
+  border-color:rgba(201,164,92,.15) !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)) !important;
+  box-shadow:0 12px 32px rgba(0,0,0,.20) !important;
+}
+#content > .grid > .card:hover,
+#content > .grid-4 > .card:hover,
+#content > .grid-3 > .card:hover{
+  border-color:rgba(201,164,92,.28) !important;
+}
+
+/* Luxury scrollbar */
+.nav::-webkit-scrollbar,
+body::-webkit-scrollbar{width:6px}
+.nav::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--mafia-red),#3d0b0e);
+  border-radius:20px;
+}
+
+/* Google Sites / phone */
+@media (max-width:900px){
+  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  .welcome-card{padding:25px 27px !important}
+}
+@media (max-width:750px){
+  .welcome-card{
+    min-height:125px !important;
+    padding:23px 22px !important;
+  }
+  .welcome-title{font-size:24px !important}
+  .welcome-card::after{font-size:70px;right:15px}
+  .quick-grid{grid-template-columns:1fr !important}
+  .quick-card{min-height:82px !important}
+  .quick-icon{width:40px !important;height:40px !important;flex-basis:40px !important}
+}
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion:reduce){
+  .quick-card,.quick-arrow,.quick-icon{transition:none !important}
+}
+
+
+/* =========================================================
+   KASBON & SETORAN — PER MEMBER / LUXURY TABLE
+========================================================= */
+
+.kasbon-page-head,
+.kasbon-list-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+.kasbon-page-subtitle,
+.kasbon-list-desc {
+  color:rgba(255,255,255,.58);
+  font-size:12px;
+  margin-top:6px;
+}
+
+.kasbon-person-count {
+  min-width:125px;
+  padding:13px 16px;
+  border:1px solid rgba(188,25,46,.32);
+  border-radius:14px;
+  background:linear-gradient(145deg, rgba(18,18,22,.96), rgba(35,10,15,.86));
+  box-shadow:0 10px 28px rgba(0,0,0,.25), inset 0 0 24px rgba(170,20,40,.05);
+  text-align:center;
+}
+
+.kasbon-person-count strong {
+  display:block;
+  font-size:22px;
+  line-height:1;
+  color:#fff;
+}
+
+.kasbon-person-count span {
+  display:block;
+  margin-top:5px;
+  font-size:9px;
+  letter-spacing:1.3px;
+  color:rgba(255,255,255,.5);
+}
+
+.kasbon-form-card {
+  border-color:rgba(188,25,46,.2);
+}
+
+.kasbon-person-list {
+  display:grid;
+  gap:18px;
+}
+
+.kasbon-person-card {
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(193,28,48,.28);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(145,17,35,.13), transparent 35%),
+    linear-gradient(145deg, rgba(17,17,21,.98), rgba(29,10,14,.96));
+  box-shadow:
+    0 16px 42px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.kasbon-person-card::before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:linear-gradient(180deg,#d52a48,#711323,transparent);
+}
+
+.kasbon-person-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:18px 20px;
+  border-bottom:1px solid rgba(255,255,255,.055);
+}
+
+.kasbon-person-identity {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.kasbon-person-avatar {
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  border:1px solid rgba(196,29,49,.4);
+  background:linear-gradient(145deg, rgba(130,17,33,.8), rgba(35,8,13,.95));
+  color:#fff;
+  font-weight:800;
+  font-size:17px;
+  box-shadow:0 7px 18px rgba(0,0,0,.3);
+}
+
+.kasbon-person-name {
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  letter-spacing:.25px;
+}
+
+.kasbon-person-rank {
+  margin-top:4px;
+  color:rgba(255,255,255,.46);
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.kasbon-person-actions {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:7px;
+}
+
+.kasbon-mini-btn {
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;
+  padding:8px 11px;
+  background:rgba(255,255,255,.035);
+  color:#eee;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.7px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.kasbon-mini-btn:hover {
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.075);
+}
+
+.kasbon-mini-red {
+  border-color:rgba(211,38,62,.38);
+  color:#ff8292;
+}
+
+.kasbon-mini-green {
+  border-color:rgba(45,180,105,.34);
+  color:#79e3a8;
+}
+
+.kasbon-mini-delete {
+  border-color:rgba(220,60,70,.2);
+  color:rgba(255,150,160,.68);
+}
+
+.kasbon-summary-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:14px 20px;
+}
+
+.kasbon-summary {
+  min-width:0;
+  padding:12px 13px;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+}
+
+.kasbon-summary span {
+  display:block;
+  color:rgba(255,255,255,.46);
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+}
+
+.kasbon-summary strong {
+  display:block;
+  margin-top:6px;
+  color:#fff;
+  font-size:14px;
+}
+
+.kasbon-summary-red {
+  border-color:rgba(208,37,60,.18);
+}
+
+.kasbon-summary-red strong {
+  color:#ff788b;
+}
+
+.kasbon-summary-green {
+  border-color:rgba(42,175,100,.17);
+}
+
+.kasbon-summary-green strong {
+  color:#71dda1;
+}
+
+.kasbon-summary-gold {
+  border-color:rgba(205,158,48,.18);
+}
+
+.kasbon-summary-gold strong {
+  color:#e6c36d;
+}
+
+.kasbon-summary-status strong {
+  margin-top:7px;
+}
+
+.kasbon-table-wrap {
+  overflow-x:auto;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+
+.kasbon-person-table {
+  width:100%;
+  min-width:700px;
+  border-collapse:collapse;
+}
+
+.kasbon-person-table th {
+  padding:11px 14px;
+  text-align:left;
+  background:rgba(255,255,255,.025);
+  color:rgba(255,255,255,.43);
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  white-space:nowrap;
+}
+
+.kasbon-person-table td {
+  padding:12px 14px;
+  border-top:1px solid rgba(255,255,255,.045);
+  color:rgba(255,255,255,.78);
+  font-size:11px;
+  vertical-align:middle;
+}
+
+.kasbon-person-table tbody tr {
+  transition:background .15s ease;
+}
+
+.kasbon-person-table tbody tr:hover {
+  background:rgba(255,255,255,.025);
+}
+
+.kasbon-date {
+  color:rgba(255,255,255,.56) !important;
+  white-space:nowrap;
+}
+
+.kasbon-type {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 8px;
+  border-radius:7px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.7px;
+}
+
+.type-kasbon {
+  background:rgba(190,27,49,.13);
+  border:1px solid rgba(208,37,60,.24);
+  color:#ff7c8e;
+}
+
+.type-setoran {
+  background:rgba(40,171,96,.11);
+  border:1px solid rgba(40,171,96,.23);
+  color:#73dda1;
+}
+
+.amount-kasbon {
+  color:#ff7c8e !important;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.amount-setoran {
+  color:#73dda1 !important;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.kasbon-empty-state {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:190px;
+  padding:30px;
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.018);
+  text-align:center;
+}
+
+.kasbon-empty-icon {
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  margin-bottom:12px;
+  border-radius:14px;
+  border:1px solid rgba(193,28,48,.25);
+  color:#e05b70;
+  font-size:24px;
+}
+
+.kasbon-empty-state strong {
+  color:#fff;
+  font-size:14px;
+}
+
+.kasbon-empty-state span {
+  margin-top:5px;
+  color:rgba(255,255,255,.43);
+  font-size:11px;
+}
+
+@media (max-width: 800px) {
+  .kasbon-page-head,
+  .kasbon-list-head {
+    align-items:flex-start;
+  }
+
+  .kasbon-summary-grid {
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .kasbon-person-head {
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .kasbon-person-actions {
+    width:100%;
+    justify-content:flex-start;
+  }
+
+  .kasbon-mini-btn {
+    flex:1;
+    min-width:82px;
+  }
+}
+
+@media (max-width: 520px) {
+  .kasbon-page-head {
+    flex-direction:column;
+  }
+
+  .kasbon-person-count {
+    width:100%;
+  }
+
+  .kasbon-summary-grid {
+    grid-template-columns:1fr 1fr;
+    padding:12px;
+  }
+
+  .kasbon-person-head {
+    padding:15px;
+  }
+
+  .kasbon-mini-btn {
+    font-size:8px;
+    padding:8px 7px;
+  }
+
+  .kasbon-table-wrap {
+    margin:0;
+  }
+}
+
+
+
+/* =====================================================
+   MAGANG - KASBON READ ONLY
+===================================================== */
+.kasbon-readonly-head {
+  align-items: center;
+}
+
+.kasbon-readonly-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid rgba(210, 180, 90, .32);
+  border-radius: 999px;
+  background: rgba(210, 180, 90, .08);
+  color: #d8bd73;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  white-space: nowrap;
+}
+
+.kasbon-readonly-badge span {
+  font-size: 8px;
+  opacity: .9;
+}
+
+.kasbon-readonly-card {
+  border-color: rgba(210, 180, 90, .22);
+}
+
+.kasbon-readonly-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.07);
+  color: rgba(255,255,255,.62);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.kasbon-readonly-note {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+  color: rgba(255,255,255,.62);
+}
+
+.kasbon-readonly-note > span {
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.kasbon-readonly-note strong {
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(255,255,255,.86);
+  font-size: 12px;
+  letter-spacing: .5px;
+}
+
+.kasbon-readonly-note p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .kasbon-readonly-head {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .kasbon-readonly-badge {
+    font-size: 9px;
+    padding: 7px 10px;
+  }
+
+  .kasbon-readonly-lock {
+    font-size: 9px;
+    padding: 7px 9px;
+  }
+}
+
+
+/* =========================================================
+   PERATURAN CRIMSON HERITAGE — SIMPLE / READABLE
+========================================================= */
+.rules-page {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.rules-hero {
+  padding: 8px 0 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.rules-kicker {
+  color: var(--mafia-gold);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.rules-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.rules-desc {
+  color: rgba(255,255,255,.52);
+  font-size: 10px;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.rules-list {
+  display: grid;
+  gap: 6px;
+}
+
+.rule-card {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 11px 13px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.rule-card:hover {
+  background: rgba(181,18,27,.055);
+  border-color: rgba(181,18,27,.22);
+}
+
+.rule-number {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: rgba(181,18,27,.13);
+  border: 1px solid rgba(181,18,27,.22);
+  color: #e7c77e;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.rule-text {
+  color: rgba(255,255,255,.82);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.rules-note {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-left: 2px solid rgba(201,164,92,.55);
+  color: rgba(255,255,255,.42);
+  font-size: 9px;
+  line-height: 1.45;
+  background: rgba(255,255,255,.018);
+}
+
+@media (max-width: 750px) {
+  .rules-heading {
+    font-size: 21px;
+  }
+
+  .rule-card {
+    grid-template-columns: 27px minmax(0, 1fr);
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .rule-number {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+
+  .rule-text {
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+}
+
+
+/* =========================================================
+   CRIMSON HERITAGE — KEUANGAN + CINZEL / INTER
+========================================================= */
+:root{
+  --ch-display-font:"Cinzel",Georgia,"Times New Roman",serif;
+  --ch-body-font:"Inter",Arial,sans-serif;
+}
+html,body,button,input,select,textarea{
+  font-family:var(--ch-body-font) !important;
+}
+.login-title,.loader-title,.sidebar-brand,.page-title,.modal-title,
+.welcome-title,.rules-heading,.section-title,.quick-card strong{
+  font-family:var(--ch-display-font) !important;
+}
+.nav-item,.quick-card strong,.section-title,.page-title,.modal-title,
+.field label,.btn,table th,.welcome-label,.rules-kicker{
+  text-transform:uppercase;
+}
+.nav-item{
+  font-family:var(--ch-display-font) !important;
+  font-weight:600 !important;
+  letter-spacing:.7px !important;
+}
+.keuangan-balance{
+  position:relative;
+  overflow:hidden;
+  padding:30px 32px;
+  margin-bottom:20px;
+  border:1px solid rgba(201,164,92,.25);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 88% 45%,rgba(181,18,27,.22),transparent 30%),
+    linear-gradient(115deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  box-shadow:0 20px 50px rgba(0,0,0,.30),inset 0 0 0 1px rgba(255,255,255,.025);
+}
+.keuangan-balance:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,#df2632,#c8a45b,transparent);
+}
+.keuangan-balance-label{
+  color:#c9a45c;
+  font:600 11px var(--ch-display-font);
+  letter-spacing:2px;
+}
+.keuangan-balance-value{
+  margin-top:7px;
+  color:#f4f1eb;
+  font:700 clamp(30px,5vw,46px) var(--ch-body-font);
+  letter-spacing:-1px;
+}
+.keuangan-balance-period{
+  margin-top:8px;
+  color:rgba(255,255,255,.45);
+  font-size:9px;
+  letter-spacing:1px;
+}
+.keuangan-form-card{margin-bottom:18px}
+.keuangan-tools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:18px;
+}
+.finance-type{
+  display:inline-flex;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.4px;
+}
+.finance-in-badge{
+  background:rgba(55,201,120,.12);
+  color:#62e39a;
+}
+.finance-out-badge{
+  background:rgba(239,77,90,.12);
+  color:#ff7882;
+}
+.finance-in{color:#62e39a !important;font-weight:700}
+.finance-out{color:#ff7882 !important;font-weight:700}
+.finance-delete-btn{padding:7px 10px !important;font-size:9px !important}
+.duplicate-card{margin-top:20px;border:1px solid rgba(239,77,90,.22)}
+.duplicate-clean{
+  margin-top:20px;
+  border:1px solid rgba(55,201,120,.18);
+  color:rgba(255,255,255,.72);
+}
+.duplicate-clean strong{color:#62e39a}
+.duplicate-clean div{margin-top:5px;font-size:10px;color:rgba(255,255,255,.45)}
+.duplicate-note{
+  margin-bottom:14px;
+  color:rgba(255,255,255,.48);
+  font-size:10px;
+  line-height:1.6;
+}
+.duplicate-pair{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  background:rgba(255,255,255,.018);
+}
+.duplicate-pair-title{
+  margin-bottom:9px;
+  color:#c9a45c;
+  font:700 10px var(--ch-display-font);
+  letter-spacing:1px;
+}
+.duplicate-row{
+  display:grid;
+  grid-template-columns:1.1fr 1fr 1.2fr .8fr auto;
+  gap:10px;
+  align-items:center;
+  padding:10px 0;
+  border-top:1px solid rgba(255,255,255,.055);
+  font-size:10px;
+}
+.duplicate-row:first-of-type{border-top:0}
+.duplicate-row strong{display:block;color:#f4f1eb}
+.duplicate-row span{display:block;margin-top:3px;color:rgba(255,255,255,.38);font-size:9px}
+@media(max-width:750px){
+  .keuangan-balance{padding:24px 22px}
+  .keuangan-balance-value{font-size:32px}
+  .duplicate-row{grid-template-columns:1fr 1fr}
+  .duplicate-row button{grid-column:1/-1;width:100%}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div id="loader">
+
+  <img
+    class="loader-logo"
+    src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E"
+  >
+
+  <div class="loader-title">
+    CRIMSON HERITAGE
+  </div>
+
+  <div class="loader-subtitle">
+    INVENTORY MANAGEMENT
+  </div>
+
+  <div class="loader-line"></div>
+
+</div>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<section id="loginPage">
+
+  <div class="login-card">
+
+    <img
+      class="login-logo"
+      src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E"
+    >
+
+    <div class="login-title">
+      CRIMSON HERITAGE
+    </div>
+
+    <div class="login-subtitle">
+      SECURE MANAGEMENT SYSTEM
+    </div>
+
+    <form
+      class="login-form"
+      onsubmit="handleLogin(event)"
+    >
+
+      <div
+        id="loginError"
+        class="login-error"
+      ></div>
+
+      <div class="field">
+
+        <label>Username</label>
+
+        <input
+          id="loginUsername"
+          autocomplete="username"
+          placeholder="Masukkan username"
+          required
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Password</label>
+
+        <input
+          id="loginPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Masukkan password"
+          required
+        >
+
+      </div>
+
+      <button
+        id="loginButton"
+        class="btn btn-primary"
+        type="submit"
+      >
+        MASUK
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     APP
+===================================================== -->
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+
+  <aside
+    id="sidebar"
+    class="sidebar"
+  >
+
+    <div class="brand">
+
+      <img
+        src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E"
+      >
+
+      <div class="brand-name">
+        CRIMSON HERITAGE
+      </div>
+
+      <div
+        id="sidebarRole"
+        class="brand-role"
+      >
+        SYSTEM
+      </div>
+
+    </div>
+
+
+    <nav
+      id="navigation"
+      class="nav"
+    >
+
+      <!-- MENU DIISI JAVASCRIPT -->
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="profile-mini">
+
+        <div
+          id="sidebarName"
+          class="profile-mini-name"
+        >
+          -
+        </div>
+
+        <div
+          id="sidebarUserRole"
+          class="profile-mini-role"
+        >
+          -
+        </div>
+
+      </div>
+
+      <button
+        class="logout"
+        onclick="logoutApp()"
+      >
+        LOGOUT
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+
+        <div
+          id="pageTitle"
+          class="page-title"
+        >
+          Dashboard
+        </div>
+
+        <div
+          id="pageSubtitle"
+          class="page-subtitle"
+        >
+          CRIMSON HERITAGE MANAGEMENT SYSTEM
+        </div>
+
+      </div>
+
+      <button
+        class="mobile-menu"
+        onclick="toggleSidebar()"
+      >
+        ☰
+      </button>
+
+    </div>
+
+
+    <div id="content"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL
+===================================================== -->
+
+<div
+  id="modal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <div
+        id="modalTitle"
+        class="modal-title"
+      >
+        Modal
+      </div>
+
+      <button
+        class="close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div id="modalContent"></div>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast"></div>
+
+<!-- WEBSITE CREDIT / INSPIRATION -->
+<div class="credit-watermark" aria-hidden="true">
+  <strong>CRIMSON HERITAGE</strong>
+  <span>Website crafted by Bearnad Osaze N Verhoeven</span>
+  <span>Inspired by Elowyn Helixine Verhoeven FM &amp; Jaene Nyx FM</span>
+</div>
+
+
+<script>
+
+/* ============================================================
+   CRIMSON HERITAGE - GITHUB PAGES BRIDGE v3
+   GitHub Pages tidak menyediakan google.script.run.
+   Request dikirim ke Apps Script lewat POST, lalu hasilnya
+   diambil melalui JSONP sehingga tidak bergantung pada CORS
+   atau postMessage dari HtmlService.
+============================================================ */
+(function installCrimsonApiBridge_() {
+  if (window.google && window.google.script && window.google.script.run) return;
+
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwWnLGFTUzg-nK5klwKDF9UkjFz8iEnRdiLXdq5Mo2gIb4LUBj6jFbN3a2hbKnAA5bkog/exec';
+  const pending = new Map();
+  let sequence = 0;
+
+  function cleanup_(id) {
+    const item = pending.get(id);
+    if (!item) return;
+    pending.delete(id);
+    if (item.timeout) clearTimeout(item.timeout);
+    if (item.pollTimer) clearTimeout(item.pollTimer);
+    if (item.iframe && item.iframe.parentNode) item.iframe.parentNode.removeChild(item.iframe);
+    if (item.script && item.script.parentNode) item.script.parentNode.removeChild(item.script);
+    try { delete window[item.callbackName]; } catch (e) { window[item.callbackName] = undefined; }
+  }
+
+  function finish_(id, data) {
+    const item = pending.get(id);
+    if (!item) return;
+    const success = item.success;
+    const failure = item.failure;
+    const userObject = item.userObject;
+    cleanup_(id);
+    if (data && data.ok) {
+      if (typeof success === 'function') success(data.result, userObject);
+    } else if (typeof failure === 'function') {
+      failure({ message: (data && data.error) || 'Terjadi kesalahan pada server.' }, userObject);
+    }
+  }
+
+  function poll_(id) {
+    const item = pending.get(id);
+    if (!item) return;
+    const script = document.createElement('script');
+    item.script = script;
+    script.async = true;
+    script.src = API_URL + '?chRpc=' + encodeURIComponent(id) + '&chCb=' + encodeURIComponent(item.callbackName) + '&_=' + Date.now();
+    script.onload = function() {
+      if (item.script === script) item.script = null;
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    script.onerror = function() {
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (!pending.has(id)) return;
+      item.pollTimer = setTimeout(function() { poll_(id); }, 500);
+    };
+    document.body.appendChild(script);
+  }
+
+  function call_(method, args, success, failure, userObject) {
+    const id = 'ch_' + Date.now() + '_' + (++sequence);
+    const iframeName = 'ch_post_' + id;
+    const callbackName = '__crimsonRpc_' + id.replace(/[^A-Za-z0-9_$]/g, '_');
+
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.position = 'fixed';
+    iframe.style.width = '1px';
+    iframe.style.height = '1px';
+    iframe.style.left = '-10000px';
+    iframe.style.top = '-10000px';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(iframe);
+
+    const item = {
+      success: success,
+      failure: failure,
+      userObject: userObject,
+      iframe: iframe,
+      script: null,
+      callbackName: callbackName,
+      pollTimer: null,
+      timeout: null
+    };
+    pending.set(id, item);
+
+    window[callbackName] = function(data) {
+      if (!data || !data.ready) {
+        item.pollTimer = setTimeout(function() { poll_(id); }, 350);
+        return;
+      }
+      finish_(id, data);
+    };
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = API_URL;
+    form.target = iframeName;
+    form.style.display = 'none';
+
+    function addField_(name, value) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
+
+    addField_('rpcId', id);
+    addField_('method', method);
+    addField_('args', JSON.stringify(args || []));
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+
+    item.pollTimer = setTimeout(function() { poll_(id); }, 400);
+    item.timeout = setTimeout(function() {
+      if (pending.has(id)) finish_(id, { ok: false, error: 'Server tidak merespons dalam 30 detik. Coba refresh halaman lalu login lagi.' });
+    }, 30000);
+  }
+
+  function makeRunner_(handlers) {
+    handlers = handlers || { success: null, failure: null, userObject: null };
+    return new Proxy({}, {
+      get: function(target, prop) {
+        if (prop === 'withSuccessHandler') return function(fn) {
+          return makeRunner_({ success: typeof fn === 'function' ? fn : null, failure: handlers.failure, userObject: handlers.userObject });
+        };
+        if (prop === 'withFailureHandler') return function(fn) {
+          return makeRunner_({ success: handlers.success, failure: typeof fn === 'function' ? fn : null, userObject: handlers.userObject });
+        };
+        if (prop === 'withUserObject') return function(obj) {
+          return makeRunner_({ success: handlers.success, failure: handlers.failure, userObject: obj });
+        };
+        if (typeof prop !== 'string') return undefined;
+        return function() { call_(prop, Array.prototype.slice.call(arguments), handlers.success, handlers.failure, handlers.userObject); };
+      }
+    });
+  }
+
+  window.google = window.google || {};
+  window.google.script = window.google.script || {};
+  window.google.script.run = makeRunner_();
+  window.CRIMSON_HERITAGE_API_URL = API_URL;
+})();
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+function storageGet_(key) {
+  try {
+    return window.localStorage.getItem(key) || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+function storageSet_(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch (e) {}
+}
+
+function storageRemove_(key) {
+  try {
+    window.localStorage.removeItem(key);
+  } catch (e) {}
+}
+
+let TOKEN = storageGet_('CH_TOKEN');
+let USER = null;
+let PERMISSIONS = {};
+let FINANCE_REPORT = null;
+
+let CURRENT_ITEMS = [];
+let CURRENT_MEMBERS = [];
+let CURRENT_USERS = [];
+
+const LOGO_1 =
+  'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E';
+
+const LOGO_2 =
+  'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ff3340%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237b0710%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%2244%22%20fill%3D%22%23090909%22%2F%3E%3Cpath%20d%3D%22M128%2024%20151%2092l70%200-56%2041%2021%2068-58-40-58%2040%2021-68-56-41h70z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%225%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22128%22%20r%3D%2217%22%20fill%3D%22%23090909%22%20stroke%3D%22%23d9ad63%22%20stroke-width%3D%224%22%2F%3E%3C%2Fsvg%3E';
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+window.addEventListener('load', function() {
+
+  setTimeout(function() {
+
+    document
+      .getElementById('loader')
+      .classList.add('hidden');
+
+  }, 700);
+
+
+  if (TOKEN) {
+
+    google.script.run
+      .withSuccessHandler(function(profile) {
+
+        USER = profile;
+
+        openApp();
+
+      })
+      .withFailureHandler(function(err) {
+
+        const message = getErrorMessage(err);
+
+        TOKEN = '';
+        USER = null;
+        storageRemove_('CH_TOKEN');
+        showLogin();
+
+        const error = document.getElementById('loginError');
+        if (error && message) {
+          error.textContent =
+            isSessionError_(message)
+              ? 'Sesi lama sudah tidak valid. Silakan login kembali.'
+              : message;
+          error.style.display = 'block';
+        }
+
+      })
+      .getMyProfile(TOKEN);
+
+  } else {
+
+    showLogin();
+
+  }
+
+});
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function handleLogin(event) {
+
+  event.preventDefault();
+
+  const username =
+    document
+      .getElementById('loginUsername')
+      .value;
+
+  const password =
+    document
+      .getElementById('loginPassword')
+      .value;
+
+  const button =
+    document
+      .getElementById('loginButton');
+
+  const error =
+    document
+      .getElementById('loginError');
+
+  button.disabled = true;
+  button.textContent = 'MEMERIKSA...';
+
+  error.style.display = 'none';
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      button.disabled = false;
+      button.textContent = 'MASUK';
+
+      if (!result.success) {
+
+        error.textContent =
+          result.message ||
+          'Login gagal.';
+
+        error.style.display =
+          'block';
+
+        return;
+
+      }
+
+      TOKEN =
+        result.token;
+
+      USER =
+        result.user;
+
+      storageSet_(
+        'CH_TOKEN',
+        TOKEN
+      );
+
+      openApp();
+
+    })
+
+    .withFailureHandler(function(err) {
+
+      button.disabled = false;
+      button.textContent = 'MASUK';
+
+      error.textContent =
+        getErrorMessage(err);
+
+      error.style.display =
+        'block';
+
+    })
+
+    .login(
+      username,
+      password
+    );
+
+}
+
+
+/* =====================================================
+   OPEN APP
+===================================================== */
+
+function openApp() {
+
+  document
+    .getElementById('loginPage')
+    .style.display = 'none';
+
+  document
+    .getElementById('app')
+    .style.display = 'block';
+
+  document
+    .getElementById('sidebarName')
+    .textContent =
+      USER.nama;
+
+  document
+    .getElementById('sidebarRole')
+    .textContent =
+      USER.role;
+
+  document
+    .getElementById('sidebarUserRole')
+    .textContent =
+      USER.role;
+
+  loadPermissions();
+
+}
+
+
+function showLogin() {
+
+  document
+    .getElementById('loginPage')
+    .style.display = 'flex';
+
+  document
+    .getElementById('app')
+    .style.display = 'none';
+
+}
+
+
+/* =====================================================
+   PERMISSIONS
+===================================================== */
+
+function loadPermissions() {
+
+  google.script.run
+
+    .withSuccessHandler(function(data) {
+
+      PERMISSIONS =
+        data || {};
+
+      buildNavigation();
+
+      if (
+        USER.role === 'MEMBER' ||
+        USER.role === 'MAGANG'
+      ) {
+
+        showPage(
+          'pickup',
+          'PENGAMBILAN BARANG'
+        );
+
+      } else {
+
+        showPage(
+          'dashboard',
+          'DASHBOARD'
+        );
+
+      }
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getPermissions(TOKEN);
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function buildNavigation() {
+
+  const nav = document.getElementById('navigation');
+  let html = '';
+
+  if (PERMISSIONS.dashboard) {
+    html += navButton('dashboard', '⌂', 'DASHBOARD');
+  }
+
+  if (
+    PERMISSIONS.stock ||
+    PERMISSIONS.masuk ||
+    PERMISSIONS.keluar
+  ) {
+    html += `<div class="nav-section">INVENTORY</div>`;
+  }
+
+  if (PERMISSIONS.stock) {
+    html += navButton('stock', '▣', 'STOCK BRANGKAS');
+  }
+
+  if (PERMISSIONS.masuk) {
+    html += navButton('stockin', '↑', 'BARANG MASUK');
+  }
+
+  if (PERMISSIONS.keluar) {
+    html += navButton('stockout', '↓', 'BARANG KELUAR');
+  }
+
+  if (PERMISSIONS.pickup || PERMISSIONS.party) {
+    html += `<div class="nav-section">OPERASIONAL</div>`;
+  }
+
+  if (PERMISSIONS.pickup) {
+    html += navButton('pickup', '□', 'PENGAMBILAN BARANG');
+  }
+
+  if (PERMISSIONS.party) {
+    html += navButton('party', '♜', 'EVENT');
+  }
+
+  if (PERMISSIONS.kerjasama) {
+    html += navButton('kerjasama', '🤝', 'PARTNERSHIP');
+  }
+
+  if (PERMISSIONS.finance) {
+    html += navButton('finance', '◆', 'LAPORAN KEUANGAN');
+  }
+
+  // Kasbon & Setoran tetap tersedia sebagai modul operasional terpisah.
+  if (PERMISSIONS.kasbon) {
+    html += navButton(
+      'kasbon',
+      '◇',
+      USER && String(USER.role).toUpperCase() === 'MAGANG'
+        ? 'Kasbon Saya'
+        : 'Kasbon & Setoran'
+    );
+  }
+
+  if (PERMISSIONS.members || PERMISSIONS.history) {
+    html += `<div class="nav-section">MANAGEMENT</div>`;
+  }
+
+  if (PERMISSIONS.members) {
+    html += navButton('members', '♙', 'MEMBERS');
+  }
+
+  if (PERMISSIONS.history) {
+    html += navButton('history', '☷', 'HISTORY');
+  }
+
+  if (PERMISSIONS.accounts) {
+    html += `<div class="nav-section">SYSTEM</div>`;
+    html += navButton('accounts', '⚙', 'MANAJEMEN AKUN');
+  }
+
+  html += `<div class="nav-section">INFORMASI</div>`;
+  html += navButton('rules', '⚖', 'PERATURAN');
+
+  html += `<div class="nav-section">AKUN</div>`;
+  html += navButton('profile', '●', 'PROFIL & PASSWORD');
+
+  nav.innerHTML = html;
+}
+
+
+function navButton(
+  page,
+  icon,
+  title
+) {
+
+  return `
+    <button
+      class="nav-item"
+      data-page="${page}"
+      onclick="showPage('${page}', '${title}')"
+    >
+      <span>${icon}</span>
+      <span>${title}</span>
+    </button>
+  `;
+
+}
+
+
+/* =====================================================
+   PAGE ROUTER
+===================================================== */
+
+function showPage(
+  page,
+  title
+) {
+
+  const protectedPermission = {
+    dashboard: 'dashboard',
+    stock: 'stock',
+    stockin: 'masuk',
+    stockout: 'keluar',
+    pickup: 'pickup',
+    party: 'party',
+    kerjasama: 'kerjasama',
+    kasbon: 'kasbon',
+    finance: 'finance',
+    members: 'members',
+    history: 'history',
+    accounts: 'accounts'
+  };
+
+  const requiredPermission = protectedPermission[page];
+
+  if (requiredPermission && !PERMISSIONS[requiredPermission]) {
+    toast('Akses ke halaman ini tidak tersedia untuk role ' + (USER && USER.role ? USER.role : '') + '.', 'error');
+    return;
+  }
+
+  document
+    .querySelectorAll('.nav-item')
+    .forEach(function(button) {
+
+      button.classList.toggle(
+        'active',
+        button.dataset.page === page
+      );
+
+    });
+
+  document
+    .getElementById('pageTitle')
+    .textContent = title;
+
+  document
+    .getElementById('content')
+    .innerHTML =
+      loadingHTML();
+
+  document
+    .getElementById('sidebar')
+    .classList.remove('open');
+
+
+  switch(page) {
+
+    case 'dashboard':
+      loadDashboardPage();
+      break;
+
+    case 'stock':
+      loadStockPage();
+      break;
+
+    case 'stockin':
+      loadStockInPage();
+      break;
+
+    case 'stockout':
+      loadStockOutPage();
+      break;
+
+    case 'pickup':
+      loadPickupPage();
+      break;
+
+    case 'party':
+      loadPartyPage();
+      break;
+
+    case 'kerjasama':
+      loadPartnershipPage();
+      break;
+
+    case 'kasbon':
+      loadKasbonPage();
+      break;
+
+    case 'finance':
+      loadFinancePage();
+      break;
+
+    case 'members':
+      loadMembersPage();
+      break;
+
+    case 'history':
+      loadHistoryPage();
+      break;
+
+    case 'accounts':
+      loadAccountsPage();
+      break;
+
+    case 'rules':
+      loadRulesPage();
+      break;
+
+    case 'profile':
+      loadProfilePage();
+      break;
+
+    default:
+      loadDashboardPage();
+
+  }
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function loadDashboardPage() {
+
+  const actions = [];
+
+  function addAction(permission, page, icon, title, desc) {
+    if (PERMISSIONS[permission]) {
+      actions.push({
+        page: page,
+        icon: icon,
+        title: title,
+        desc: desc
+      });
+    }
+  }
+
+  addAction(
+    'stock',
+    'stock',
+    '▣',
+    'STOCK BRANGKAS',
+    'Lihat dan kelola stok'
+  );
+
+  addAction(
+    'masuk',
+    'stockin',
+    '↑',
+    'BARANG MASUK',
+    'Catat barang yang masuk'
+  );
+
+  addAction(
+    'keluar',
+    'stockout',
+    '↓',
+    'BARANG KELUAR',
+    'Catat barang yang keluar'
+  );
+
+  addAction(
+    'pickup',
+    'pickup',
+    '□',
+    'Pengambilan',
+    'Kelola pengambilan barang untuk member'
+  );
+
+  addAction(
+    'party',
+    'party',
+    '♜',
+    'EVENT',
+    'Catat dan lihat data event'
+  );
+
+  addAction(
+    'kerjasama',
+    'kerjasama',
+    '🤝',
+    'PARTNERSHIP',
+    'Kelola partner dan pembelian dua arah'
+  );
+
+  addAction(
+    'kasbon',
+    'kasbon',
+    '◇',
+    'Kasbon & Setoran',
+    'Kelola kasbon operasional'
+  );
+
+  addAction(
+    'members',
+    'members',
+    '♙',
+    'MEMBERS',
+    'Kelola data member'
+  );
+
+  addAction(
+    'history',
+    'history',
+    '☷',
+    'HISTORY',
+    'Lihat aktivitas sistem'
+  );
+
+  addAction(
+    'accounts',
+    'accounts',
+    '⚙',
+    'MANAJEMEN AKUN',
+    'Kelola akun pengguna'
+  );
+
+  actions.push({
+    page: 'rules',
+    icon: '⚖',
+    title: 'PERATURAN',
+    desc: 'Lihat peraturan Crimson Heritage'
+  });
+
+  let actionHTML = '';
+
+  actions.forEach(function(action) {
+    actionHTML += `
+      <button
+        class="quick-card"
+        onclick="showPage('${action.page}', '${action.title}')"
+      >
+        <span class="quick-icon">${action.icon}</span>
+        <span class="quick-text">
+          <strong>${escapeHTML(action.title)}</strong>
+          <small>${escapeHTML(action.desc)}</small>
+        </span>
+        <span class="quick-arrow">›</span>
+      </button>
+    `;
+  });
+
+  document.getElementById('content').innerHTML = `
+    <div class="welcome-card">
+      <div>
+        <div class="welcome-label">SELAMAT DATANG</div>
+        <div class="welcome-title">
+          ${escapeHTML(USER.nama || 'User')}
+        </div>
+        <div class="welcome-desc">
+          Pilih menu yang ingin kamu gunakan.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title quick-title">
+      AKSES CEPAT
+    </div>
+
+    <div class="quick-grid">
+      ${actionHTML || `
+        <div class="card">
+          <div class="empty">Tidak ada menu yang tersedia.</div>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   PERATURAN CRIMSON HERITAGE
+===================================================== */
+
+function loadRulesPage() {
+
+  const rules = [
+    'WAJIB BEKERJA SELAMA 93 JAM DALAM 1 BULAN',
+    'DILARANG KERAS MENCORNG NAMA BAIK CRIMSON HERITAGE (SEPERTI MEMBUAT KEGADUHAN MEMBAWA NAMA CRIMSON HERITAGE)',
+    'SURAT IZIN WAJIB DIBUAT JIKA TIDAK DAPAT BEKERJA',
+    'TIDAK MELAKUKAN TINDAK KRIMINAL TANPA OG',
+    'WAJIB MEMASUKI RADIO 95.999 SELAMA DI KOTA (KECUALI SEDANG JALAN)',
+    'USAHAKAN MENGAJUKAN PEMBUATAN EVENT 1 X DALAM 4 MINGGU',
+    'DILARANG MEMBAWA BARANG ILEGAL APAPUN SELAMA BEKERJA DI CRIMSON HERITAGE',
+    'SETORAN WAJIB DI SETORKAN SETIAP 1 MINGGU',
+    'ABSEN TANPA SURAT IZIN SELAMA 3 MINGGU DI ANGGAP MENGUNDURKAN DIRI (JIKA INGIN KEMBALI BEKERJA HARUS MEMULAI DARI MAGANG)',
+    '2 BULAN TIDAK AKTIF DI KOTA DI NYATAKAN MENGUNDURKAN DIRI TERIMA KASIH!!!'
+  ];
+
+  let rulesHTML = '';
+
+  rules.forEach(function(rule, index) {
+    rulesHTML += `
+      <article class="rule-card">
+        <div class="rule-number">${index + 1}</div>
+        <div class="rule-text">${escapeHTML(rule)}</div>
+      </article>
+    `;
+  });
+
+  document.getElementById('content').innerHTML = `
+    <div class="rules-page">
+
+      <section class="rules-hero">
+        <div class="rules-kicker">CRIMSON HERITAGE • OFFICIAL RULES</div>
+        <div class="rules-heading">PERATURAN CRIMSON HERITAGE</div>      </section>
+
+      <div class="rules-list">
+        ${rulesHTML}
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   STOCK
+===================================================== */
+
+function loadStockPage() {
+
+  google.script.run
+    .withSuccessHandler(function(items) {
+      CURRENT_ITEMS = items || [];
+      renderStockPage_('');
+    })
+    .withFailureHandler(handleServerError)
+    .getItemsPublic(TOKEN);
+}
+
+function renderStockPage_(query) {
+  const q = String(query || '').trim().toLowerCase();
+  const filtered = CURRENT_ITEMS.filter(function(item) {
+    return String(item.name || '').toLowerCase().includes(q);
+  });
+
+  let cards = '';
+
+  filtered.forEach(function(item) {
+    cards += `
+      <div class="card item-card" data-stock-name="${escapeAttr(item.name)}">
+        <div class="item-top">
+          <div class="item-icon">▣</div>
+          <div class="item-name">${escapeHTML(item.name)}</div>
+          ${statusBadge(item.status)}
+        </div>
+
+        <div class="item-stock-label">STOCK TERSEDIA</div>
+        <div class="item-stock">${number(item.stock)}<span class="item-stock-unit">UNIT</span></div>
+        <div class="item-min">Minimum stock: ${number(item.minimum)} pcs</div>
+
+        <div class="item-footer">
+          <button
+            class="btn btn-muted item-edit"
+            onclick='openEditItemModal(${JSON.stringify(item)})'
+          >
+            EDIT BARANG
+          </button>
+        </div>
+      </div>`;
+  });
+
+  if (!cards) {
+    cards = `<div class="card empty stock-empty">Barang dengan nama <b>${escapeHTML(query || '')}</b> tidak ditemukan.</div>`;
+  }
+
+  let cardsContainer = document.getElementById('stockCards');
+  if (cardsContainer) {
+    cardsContainer.innerHTML = cards;
+
+    const countEl = document.getElementById('stockCount');
+    if (countEl) {
+      countEl.textContent = filtered.length + ' barang';
+    }
+    return;
+  }
+
+  document.getElementById('content').innerHTML = `
+    <div class="stock-toolbar">
+      <div class="stock-search-wrap">
+        <span class="stock-search-icon">⌕</span>
+        <input id="stockSearch" class="stock-search" type="search" placeholder="Cari nama barang..." autocomplete="off" spellcheck="false">
+      </div>
+      <div class="stock-toolbar-info">Menampilkan <span id="stockCount" class="stock-count">${filtered.length} barang</span></div>
+      <button class="btn btn-red" onclick="openAddItemModal()">+ TAMBAH BARANG</button>
+    </div>
+    <div id="stockCards" class="grid grid-4">${cards}</div>`;
+
+  const input = document.getElementById('stockSearch');
+  if (input) {
+    input.value = query || '';
+    input.addEventListener('input', function() {
+      renderStockPage_(this.value);
+    });
+  }
+}
+
+
+/* =====================================================
+   STOCK IN
+===================================================== */
+
+function loadStockInPage() {
+
+  google.script.run
+
+    .withSuccessHandler(function(items) {
+
+      CURRENT_ITEMS =
+        items || [];
+
+      let options = '';
+
+      CURRENT_ITEMS.forEach(function(item) {
+
+        options += `
+          <option value="${escapeAttr(item.id)}">
+            ${escapeHTML(item.name)}
+          </option>
+        `;
+
+      });
+
+      document
+        .getElementById('content')
+        .innerHTML = `
+
+        <div class="card">
+
+          <div class="section-title" style="margin-top:0">
+            BARANG MASUK
+          </div>
+
+          <div class="grid grid-2">
+
+            <div class="field">
+
+              <label>Barang</label>
+
+              <select id="inItem">
+                ${options}
+              </select>
+
+            </div>
+
+            <div class="field">
+
+              <label>Jumlah</label>
+
+              <input
+                id="inQty"
+                type="number"
+                min="1"
+                placeholder="0"
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Harga Mentah / Modal</label>
+
+              <input
+                id="inPrice"
+                type="number"
+                min="0"
+                placeholder="0"
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Nama</label>
+
+              <input
+                id="inName"
+                placeholder="Nama pencatat"
+                value="${escapeAttr(USER.nama)}"
+              >
+
+            </div>
+
+          </div>
+
+          <div class="field">
+
+            <label>Keterangan</label>
+
+            <textarea
+              id="inNote"
+              placeholder="Keterangan..."
+            ></textarea>
+
+          </div>
+
+          <button
+            class="btn btn-red"
+            onclick="submitStockIn()"
+          >
+            SIMPAN BARANG MASUK
+          </button>
+
+        </div>
+
+      `;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getItemsPublic(TOKEN);
+
+}
+
+
+function submitStockIn() {
+
+  const item =
+    document.getElementById('inItem').value;
+
+  const qty =
+    document.getElementById('inQty').value;
+
+  const price =
+    document.getElementById('inPrice').value;
+
+  const name =
+    document.getElementById('inName').value;
+
+  const note =
+    document.getElementById('inNote').value;
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        'Barang masuk berhasil.',
+        'success'
+      );
+
+      loadStockInPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .stockIn(
+      TOKEN,
+      item,
+      qty,
+      price,
+      name,
+      note
+    );
+
+}
+
+
+/* =====================================================
+   STOCK OUT
+===================================================== */
+
+function loadStockOutPage() {
+
+  Promise.all([
+    getItemsPromise(),
+    getMembersPromise()
+  ])
+  .then(function(results) {
+
+    const items = results[0];
+    const members = results[1];
+
+    CURRENT_ITEMS = items;
+    CURRENT_MEMBERS = members;
+
+    let itemOptions = '';
+    let memberOptions = '';
+
+    items.forEach(function(item) {
+
+      itemOptions += `
+        <option value="${escapeAttr(item.id)}">
+          ${escapeHTML(item.name)}
+          — Stock ${item.stock}
+        </option>
+      `;
+
+    });
+
+    members
+      .filter(function(member) {
+        return member.status === 'ACTIVE';
+      })
+      .forEach(function(member) {
+
+        memberOptions += `
+          <option value="${escapeAttr(member.id)}">
+            ${escapeHTML(member.name)}
+            — ${escapeHTML(member.rank || '-')}
+          </option>
+        `;
+
+      });
+
+    document
+      .getElementById('content')
+      .innerHTML = `
+
+      <div class="card">
+
+        <div class="section-title" style="margin-top:0">
+          BARANG KELUAR
+        </div>
+
+        <div class="grid grid-2">
+
+          <div class="field">
+
+            <label>Member</label>
+
+            <select id="outMember">
+              <option value="">
+                Pilih Member
+              </option>
+              ${memberOptions}
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>Barang</label>
+
+            <select id="outItem">
+              ${itemOptions}
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>Jumlah</label>
+
+            <input
+              id="outQty"
+              type="number"
+              min="1"
+              placeholder="0"
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Nama</label>
+
+            <input
+              id="outName"
+              value="${escapeAttr(USER.nama)}"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>Keterangan</label>
+
+          <textarea
+            id="outNote"
+            placeholder="Keterangan..."
+          ></textarea>
+
+        </div>
+
+        <button
+          class="btn btn-red"
+          onclick="submitStockOut()"
+        >
+          SIMPAN BARANG KELUAR
+        </button>
+
+      </div>
+
+    `;
+
+  })
+  .catch(handleServerError);
+
+}
+
+
+function submitStockOut() {
+
+  const member =
+    document.getElementById('outMember').value;
+
+  const item =
+    document.getElementById('outItem').value;
+
+  const qty =
+    document.getElementById('outQty').value;
+
+  const name =
+    document.getElementById('outName').value;
+
+  const note =
+    document.getElementById('outNote').value;
+
+  if (!member) {
+
+    toast(
+      'Pilih member terlebih dahulu.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        'Barang keluar berhasil.',
+        'success'
+      );
+
+      loadStockOutPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .stockOut(
+      TOKEN,
+      member,
+      item,
+      qty,
+      name,
+      note
+    );
+
+}
+
+
+/* =====================================================
+   PICKUP
+===================================================== */
+
+function loadPickupPage() {
+
+  const privileged =
+    USER &&
+    (
+      String(USER.role || '').toUpperCase() === 'ADMIN' ||
+      String(USER.role || '').toUpperCase() === 'MANAGER' ||
+      String(USER.role || '').toUpperCase() === 'STAFF'
+    );
+
+  const dataPromises = [
+    getItemsPromise(),
+    getStaffPromise()
+  ];
+
+  if (privileged) {
+    dataPromises.push(
+      getMembersPromise()
+    );
+  }
+
+  Promise.all(dataPromises)
+  .then(function(results) {
+
+    const items = results[0];
+    const staff = results[1];
+    const members = privileged
+      ? (results[2] || [])
+      : [];
+
+    let itemOptions = '';
+    let staffOptions = '';
+    let memberOptions = '';
+
+    items.forEach(function(item) {
+
+      itemOptions += `
+        <option value="${escapeAttr(item.id)}">
+          ${escapeHTML(item.name)}
+        </option>
+      `;
+
+    });
+
+    staff.forEach(function(person) {
+
+      staffOptions += `
+        <option value="${escapeAttr(person.id)}">
+          ${escapeHTML(person.nama)}
+        </option>
+      `;
+
+    });
+
+    if (privileged) {
+
+      members
+        .filter(function(member) {
+          return String(member.status || '').toUpperCase() === 'ACTIVE';
+        })
+        .forEach(function(member) {
+
+          memberOptions += `
+            <option value="${escapeAttr(member.id)}">
+              ${escapeHTML(member.name)}
+              — ${escapeHTML(member.rank || '-')}
+            </option>
+          `;
+
+        });
+
+    }
+
+    document
+      .getElementById('content')
+      .innerHTML = `
+
+      <div class="card">
+
+        <div class="section-title" style="margin-top:0">
+          PENGAMBILAN BARANG
+        </div>
+
+        <div style="
+          color:#888;
+          font-size:11px;
+          margin-bottom:20px;
+        ">
+          ${
+            privileged
+              ? 'Catat pengambilan barang untuk member. Pengambilan akan masuk sebagai PENDING dan dapat diproses oleh ADMIN, MANAGER, atau STAFF.'
+              : 'Catat barang yang kamu ambil dari Staff. Pengambilan akan dicatat sebagai PENDING.'
+          }
+        </div>
+
+        <div class="grid grid-2">
+
+          ${
+            privileged
+              ? `
+                <div class="field">
+                  <label>Pengambil / Member</label>
+                  <select id="pickupMember">
+                    <option value="">
+                      Pilih Member
+                    </option>
+                    ${memberOptions}
+                  </select>
+                </div>
+              `
+              : ''
+          }
+
+          <div class="field">
+
+            <label>Barang</label>
+
+            <select id="pickupItem">
+              ${itemOptions}
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label>Jumlah</label>
+
+            <input
+              id="pickupQty"
+              type="number"
+              min="1"
+              placeholder="0"
+            >
+
+          </div>
+
+          <div class="field">
+
+            <label>Penyerah Barang</label>
+
+            <select id="pickupStaff">
+              <option value="">
+                Pilih ADMIN / MANAGER / STAFF
+              </option>
+              ${staffOptions}
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label>Keterangan</label>
+
+          <textarea
+            id="pickupNote"
+            placeholder="Keterangan pengambilan..."
+          ></textarea>
+
+        </div>
+
+        <button
+          class="btn btn-red"
+          onclick="submitPickup()"
+        >
+          CATAT PENGAMBILAN
+        </button>
+
+      </div>
+
+      <div
+        id="pickupHistoryArea"
+        style="margin-top:20px"
+      ></div>
+
+    `;
+
+    if (privileged) {
+      loadPickupHistory();
+    } else {
+      loadMyPickupHistory();
+    }
+
+  })
+  .catch(handleServerError);
+
+}
+
+
+function submitPickup() {
+
+  const privileged =
+    USER &&
+    (
+      String(USER.role || '').toUpperCase() === 'ADMIN' ||
+      String(USER.role || '').toUpperCase() === 'MANAGER' ||
+      String(USER.role || '').toUpperCase() === 'STAFF'
+    );
+
+  const item =
+    document.getElementById('pickupItem').value;
+
+  const qty =
+    document.getElementById('pickupQty').value;
+
+  const staff =
+    document.getElementById('pickupStaff').value;
+
+  const note =
+    document.getElementById('pickupNote').value;
+
+  const member =
+    privileged &&
+    document.getElementById('pickupMember')
+      ? document.getElementById('pickupMember').value
+      : '';
+
+  if (privileged && !member) {
+
+    toast(
+      'Pilih Member/Pengambil terlebih dahulu.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  if (!staff) {
+
+    toast(
+      'Pilih ADMIN / MANAGER / STAFF Penyerah.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        'Pengambilan berhasil.',
+        'success'
+      );
+
+      loadPickupPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .addPickup(
+      TOKEN,
+      item,
+      qty,
+      staff,
+      note,
+      member
+    );
+
+}
+
+
+function loadPickupHistory() {
+
+  google.script.run
+
+    .withSuccessHandler(function(rows) {
+
+      rows = rows || [];
+
+      let html = `
+        <div class="card">
+
+          <div class="section-title" style="margin-top:0">
+            RIWAYAT PENGAMBILAN
+          </div>
+
+          <div style="
+            color:#888;
+            font-size:10px;
+            margin-bottom:15px;
+          ">
+            Menampilkan seluruh pengambilan barang.
+          </div>
+
+      `;
+
+      if (!rows.length) {
+
+        html += `
+          <div class="empty">
+            Belum ada pengambilan barang.
+          </div>
+        `;
+
+      } else {
+
+        html += `
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Pengambil</th>
+                  <th>Barang</th>
+                  <th>Qty</th>
+                  <th>Staff Penyerah</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody>
+        `;
+
+        rows.forEach(function(row) {
+
+          html += `
+            <tr>
+
+              <td>${escapeHTML(row.timestamp)}</td>
+
+              <td>${escapeHTML(row.memberName)}</td>
+
+              <td>${escapeHTML(row.itemName)}</td>
+
+              <td>${number(row.qty)}</td>
+
+              <td>${escapeHTML(row.staffName)}</td>
+
+              <td>${statusBadge(row.status)}</td>
+
+              <td>
+                ${
+                  row.status === 'PENDING'
+                    ? `
+                      <button
+                        class="btn btn-green"
+                        style="padding:7px 9px;font-size:9px"
+                        onclick="processPickup('${escapeAttr(row.id)}')"
+                      >
+                        PROSES
+                      </button>
+
+                      <button
+                        class="btn btn-danger"
+                        style="padding:7px 9px;font-size:9px"
+                        onclick="cancelPickup('${escapeAttr(row.id)}')"
+                      >
+                        BATAL
+                      </button>
+                    `
+                    : '-'
+                }
+              </td>
+
+            </tr>
+          `;
+
+        });
+
+        html += `
+              </tbody>
+            </table>
+
+          </div>
+        `;
+
+      }
+
+      html += `</div>`;
+
+      document
+        .getElementById('pickupHistoryArea')
+        .innerHTML = html;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getPickupHistory(TOKEN);
+
+}
+
+
+function loadMyPickupHistory() {
+
+  google.script.run
+
+    .withSuccessHandler(function(rows) {
+
+      let html = `
+        <div class="card">
+
+          <div class="section-title" style="margin-top:0">
+            RIWAYAT PENGAMBILAN SAYA
+          </div>
+
+      `;
+
+      if (!rows.length) {
+
+        html += `
+          <div class="empty">
+            Belum ada pengambilan barang.
+          </div>
+        `;
+
+      } else {
+
+        html += `
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Barang</th>
+                  <th>Qty</th>
+                  <th>Staff Penyerah</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+        `;
+
+        rows.forEach(function(row) {
+
+          html += `
+            <tr>
+
+              <td>${escapeHTML(row.timestamp)}</td>
+
+              <td>${escapeHTML(row.itemName)}</td>
+
+              <td>${number(row.qty)}</td>
+
+              <td>${escapeHTML(row.staffName)}</td>
+
+              <td>
+                ${statusBadge(row.status)}
+              </td>
+
+            </tr>
+          `;
+
+        });
+
+        html += `
+              </tbody>
+            </table>
+
+          </div>
+        `;
+
+      }
+
+      html += `</div>`;
+
+      document
+        .getElementById('pickupHistoryArea')
+        .innerHTML = html;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getMyPickups(TOKEN);
+
+}
+
+
+/* =====================================================
+   EVENT MANAGEMENT
+===================================================== */
+
+function loadPartyPage() {
+
+  google.script.run
+    .withSuccessHandler(function(rows) {
+
+      rows = rows || [];
+
+      let tableRows = '';
+
+      rows.forEach(function(row) {
+        tableRows += `
+          <tr>
+            <td>${escapeHTML(row.tanggal || '-')}</td>
+            <td>${escapeHTML(row.nama || '-')}</td>
+            <td>${number(row.jumlah)}</td>
+            <td>${statusBadge(row.dpWd)}</td>
+            <td>${escapeHTML(row.namaPJ || '-')}</td>
+            <td>${escapeHTML(row.keterangan || '-')}</td>
+            <td>${escapeHTML(row.createdBy || '-')}</td>
+          </tr>
+        `;
+      });
+
+      const totalJumlah = rows.reduce(function(total, row) {
+        return total + Number(row.jumlah || 0);
+      }, 0);
+
+      document.getElementById('content').innerHTML = `
+        <div class="party-layout">
+
+          <div class="card">
+            <div class="section-title" style="margin-top:0">
+              TAMBAH DATA EVENT
+            </div>
+
+            <div class="grid grid-2">
+
+              <div class="field">
+                <label>Tanggal</label>
+                <input id="partyTanggal" type="date">
+              </div>
+
+              <div class="field">
+                <label>DP / WD</label>
+                <select id="partyDpWd">
+                  <option value="">Pilih DP / WD</option>
+                  <option value="DP">DP</option>
+                  <option value="WD">WD</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Nama</label>
+                <input id="partyNama" placeholder="Nama">
+              </div>
+
+              <div class="field">
+                <label>Jumlah</label>
+                <input
+                  id="partyJumlah"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="0"
+                >
+              </div>
+
+              <div class="field">
+                <label>Nama PJ</label>
+                <input
+                  id="partyNamaPJ"
+                  placeholder="Nama penanggung jawab"
+                >
+              </div>
+
+            </div>
+
+            <div class="field">
+              <label>Keterangan</label>
+              <textarea
+                id="partyKeterangan"
+                placeholder="Keterangan event..."
+              ></textarea>
+            </div>
+
+            <button
+              id="partySaveButton"
+              class="btn btn-red"
+              onclick="submitParty()"
+            >
+              SIMPAN EVENT
+            </button>
+          </div>
+<div class="card" style="padding:15px">
+                <div class="stat-label">TOTAL JUMLAH</div>
+                <div class="stat-value">
+                  ${number(totalJumlah)}
+                </div>
+              </div>
+            </div>
+
+            <div class="field-hint" style="margin-top:15px">
+              DP / WD hanya merupakan pilihan status transaksi.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:20px">
+
+          <div class="section-title" style="margin-top:0">
+            RIWAYAT EVENT
+          </div>
+
+          ${
+            rows.length
+              ? `
+                <div class="table-wrap">
+                  <table class="party-table">
+                    <thead>
+                      <tr>
+                        <th>Tanggal</th>
+                        <th>Nama</th>
+                        <th>Jumlah</th>
+                        <th>DP / WD</th>
+                        <th>Nama PJ</th>
+                        <th>Keterangan</th>
+                        <th>Dicatat Oleh</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${tableRows}
+                    </tbody>
+                  </table>
+                </div>
+              `
+              : `
+                <div class="empty">
+                  Belum ada data Event.
+                </div>
+              `
+          }
+
+        </div>
+      `;
+
+      const dateInput =
+        document.getElementById('partyTanggal');
+
+      if (dateInput) {
+        const now = new Date();
+        dateInput.value =
+          now.getFullYear() +
+          '-' +
+          String(now.getMonth() + 1).padStart(2, '0') +
+          '-' +
+          String(now.getDate()).padStart(2, '0');
+      }
+
+    })
+    .withFailureHandler(handleServerError)
+    .getPartyHistory(TOKEN);
+
+}
+
+
+function submitParty() {
+
+  const button =
+    document.getElementById('partySaveButton');
+
+  const tanggal =
+    document.getElementById('partyTanggal').value;
+
+  const nama =
+    document.getElementById('partyNama').value.trim();
+
+  const jumlah =
+    document.getElementById('partyJumlah').value;
+
+  const dpWd =
+    document.getElementById('partyDpWd').value;
+
+  const namaPJ =
+    document.getElementById('partyNamaPJ').value.trim();
+
+  const keterangan =
+    document.getElementById('partyKeterangan').value.trim();
+
+  if (!tanggal || !nama || !jumlah || !dpWd || !namaPJ) {
+    toast(
+      'Tanggal, Nama, Jumlah, DP/WD, dan Nama PJ wajib diisi.',
+      'error'
+    );
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'MENYIMPAN...';
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+
+      button.disabled = false;
+      button.textContent = 'SIMPAN EVENT';
+
+      toast(
+        result.message || 'Data Event berhasil disimpan.',
+        'success'
+      );
+
+      loadPartyPage();
+
+    })
+    .withFailureHandler(function(err) {
+
+      button.disabled = false;
+      button.textContent = 'SIMPAN EVENT';
+
+      handleServerError(err);
+
+    })
+    .addParty(
+      TOKEN,
+      keterangan,
+      namaPJ,
+      tanggal,
+      nama,
+      jumlah,
+      dpWd
+    );
+}
+
+
+/* =====================================================
+   KASBON
+===================================================== */
+
+function renderKasbonMagangReadOnly(balances, history) {
+
+  const row = balances && balances.length
+    ? balances[0]
+    : null;
+
+  const memberHistory = history || [];
+
+  let rows = '';
+
+  memberHistory.forEach(function(item) {
+
+    const isKasbon =
+      String(item.type || '').toUpperCase() === 'KASBON';
+
+    rows += `
+      <tr>
+        <td class="kasbon-date">
+          ${escapeHTML(item.timestamp || '-')}
+        </td>
+
+        <td>
+          <span class="kasbon-type ${isKasbon ? 'type-kasbon' : 'type-setoran'}">
+            ${isKasbon ? 'KASBON' : 'SETORAN'}
+          </span>
+        </td>
+
+        <td class="${isKasbon ? 'amount-kasbon' : 'amount-setoran'}">
+          ${isKasbon ? '+' : '-'} ${money(item.amount)}
+        </td>
+
+        <td>
+          ${escapeHTML(item.keterangan || '-')}
+        </td>
+
+        <td>
+          ${escapeHTML(item.nama || '-')}
+        </td>
+      </tr>
+    `;
+  });
+
+  if (!rows) {
+    rows = `
+      <tr>
+        <td colspan="5">
+          <div class="empty">
+            Belum ada riwayat Kasbon & Setoran.
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
+  const name = row && row.memberName
+    ? row.memberName
+    : (USER && USER.nama ? USER.nama : 'Saya');
+
+  const rank = row && row.rank
+    ? row.rank
+    : 'MAGANG';
+
+  const totalKasbon = row ? Number(row.totalKasbon) || 0 : 0;
+  const totalSetoran = row ? Number(row.totalSetoran) || 0 : 0;
+  const remaining = row ? Number(row.remaining) || 0 : 0;
+  const status = row ? row.status : 'AMAN';
+
+  document.getElementById('content').innerHTML = `
+
+    <div class="kasbon-page-head kasbon-readonly-head">
+      <div>
+        <div class="section-title" style="margin-top:0">
+          KASBON SAYA
+        </div>
+        <div class="kasbon-page-subtitle">
+          Data Kasbon & Setoran pribadi. Halaman ini hanya dapat dilihat.
+        </div>
+      </div>
+
+      <div class="kasbon-readonly-badge">
+        <span>●</span>
+        VIEW ONLY
+      </div>
+    </div>
+
+    <section class="kasbon-person-card kasbon-readonly-card">
+
+      <div class="kasbon-person-head">
+        <div class="kasbon-person-identity">
+          <div class="kasbon-person-avatar">
+            ${escapeHTML(String(name).trim().charAt(0).toUpperCase() || '?')}
+          </div>
+
+          <div>
+            <div class="kasbon-person-name">
+              ${escapeHTML(name)}
+            </div>
+            <div class="kasbon-person-rank">
+              ${escapeHTML(rank)} · DATA PRIBADI
+            </div>
+          </div>
+        </div>
+
+        <div class="kasbon-readonly-lock">
+          🔒 HANYA MELIHAT
+        </div>
+      </div>
+
+      <div class="kasbon-summary-grid">
+
+        <div class="kasbon-summary kasbon-summary-red">
+          <span>Total Kasbon</span>
+          <strong>${money(totalKasbon)}</strong>
+        </div>
+
+        <div class="kasbon-summary kasbon-summary-green">
+          <span>Total Setoran</span>
+          <strong>${money(totalSetoran)}</strong>
+        </div>
+
+        <div class="kasbon-summary kasbon-summary-gold">
+          <span>Sisa Kasbon</span>
+          <strong>${money(remaining)}</strong>
+        </div>
+
+        <div class="kasbon-summary kasbon-summary-status">
+          <span>Status</span>
+          <strong>${statusBadge(status)}</strong>
+        </div>
+
+      </div>
+
+      <div class="kasbon-table-wrap">
+        <table class="kasbon-person-table">
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Jenis</th>
+              <th>Nominal</th>
+              <th>Keterangan</th>
+              <th>Dicatat Oleh</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <div class="kasbon-readonly-note">
+      <span>🔐</span>
+      <div>
+        <strong>Mode baca saja</strong>
+        <p>Data ini berasal dari akun Anda. Penambahan kasbon, setoran, penghapusan, dan perubahan data hanya dapat dilakukan oleh ADMIN, MANAGER, atau STAFF.</p>
+      </div>
+    </div>
+  `;
+}
+
+function loadKasbonPage() {
+
+  Promise.all([
+    getKasbonPromise(),
+    getKasbonHistoryPromise()
+  ])
+  .then(function(results) {
+
+    const balances = results[0] || [];
+    const history = results[1] || [];
+
+    // MAGANG hanya mendapatkan halaman baca-saja miliknya sendiri.
+    // Backend sudah memfilter data berdasarkan session.memberId.
+    if (USER && String(USER.role).toUpperCase() === 'MAGANG') {
+      renderKasbonMagangReadOnly(balances, history);
+      return;
+    }
+
+    let kasbonOptions = '';
+    let setoranOptions = '';
+
+    balances.forEach(function(row) {
+
+      kasbonOptions += `
+        <option value="${escapeAttr(row.memberId)}">
+          ${escapeHTML(row.memberName)}
+          — Sisa ${money(row.remaining)}
+        </option>
+      `;
+
+      if (Number(row.remaining) > 0) {
+        setoranOptions += `
+          <option value="${escapeAttr(row.memberId)}"
+                  data-remaining="${Number(row.remaining)}">
+            ${escapeHTML(row.memberName)}
+            — Sisa ${money(row.remaining)}
+          </option>
+        `;
+      }
+
+    });
+
+    if (!setoranOptions) {
+      setoranOptions = `
+        <option value="" disabled selected>
+          Tidak ada kasbon yang bisa disetor
+        </option>
+      `;
+    }
+
+    /*
+     * Satu member = satu tabel.
+     * Hanya member yang benar-benar memiliki kasbon yang ditampilkan.
+     */
+    const activeBalances = balances.filter(function(row) {
+      return Number(row.totalKasbon) > 0;
+    });
+
+    window.__KASBON_BALANCES = balances;
+
+    const grouped = {};
+
+    activeBalances.forEach(function(row) {
+      grouped[String(row.memberId)] = {
+        balance: row,
+        history: []
+      };
+    });
+
+    history.forEach(function(row) {
+      const key = String(row.memberId);
+      if (grouped[key]) {
+        grouped[key].history.push(row);
+      }
+    });
+
+    let memberTables = '';
+
+    activeBalances.forEach(function(row) {
+
+      const key = String(row.memberId);
+      const memberData = grouped[key];
+      const memberHistory = memberData.history || [];
+
+      let rows = '';
+
+      memberHistory.forEach(function(item) {
+
+        const isKasbon =
+          String(item.type || '').toUpperCase() === 'KASBON';
+
+        rows += `
+          <tr>
+            <td class="kasbon-date">
+              ${escapeHTML(item.timestamp || '-')}
+            </td>
+
+            <td>
+              <span class="kasbon-type ${isKasbon ? 'type-kasbon' : 'type-setoran'}">
+                ${isKasbon ? 'KASBON' : 'SETORAN'}
+              </span>
+            </td>
+
+            <td class="${isKasbon ? 'amount-kasbon' : 'amount-setoran'}">
+              ${isKasbon ? '+' : '-'} ${money(item.amount)}
+            </td>
+
+            <td>
+              ${escapeHTML(item.keterangan || '-')}
+            </td>
+
+            <td>
+              ${escapeHTML(item.nama || '-')}
+            </td>
+          </tr>
+        `;
+
+      });
+
+      if (!rows) {
+        rows = `
+          <tr>
+            <td colspan="5">
+              <div class="empty">
+                Belum ada riwayat transaksi.
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+
+      memberTables += `
+        <section class="kasbon-person-card">
+
+          <div class="kasbon-person-head">
+
+            <div class="kasbon-person-identity">
+              <div class="kasbon-person-avatar">
+                ${escapeHTML(
+                  String(row.memberName || '?')
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase()
+                )}
+              </div>
+
+              <div>
+                <div class="kasbon-person-name">
+                  ${escapeHTML(row.memberName)}
+                </div>
+
+                <div class="kasbon-person-rank">
+                  ${escapeHTML(row.rank || 'MEMBER')}
+                </div>
+              </div>
+            </div>
+
+            <div class="kasbon-person-actions">
+              <button
+                class="kasbon-mini-btn kasbon-mini-red"
+                onclick="focusKasbonMember('${escapeAttr(row.memberId)}')"
+                type="button"
+              >
+                + KASBON
+              </button>
+
+              ${
+                Number(row.remaining) > 0
+                  ? `
+                    <button
+                      class="kasbon-mini-btn kasbon-mini-green"
+                      onclick="focusSetoranMember('${escapeAttr(row.memberId)}')"
+                      type="button"
+                    >
+                      + SETORAN
+                    </button>
+                  `
+                  : ''
+              }
+
+              <button
+                class="kasbon-mini-btn kasbon-mini-delete"
+                onclick="deleteKasbonPerson('${escapeAttr(row.memberId)}')"
+                type="button"
+              >
+                HAPUS
+              </button>
+            </div>
+
+          </div>
+
+          <div class="kasbon-summary-grid">
+
+            <div class="kasbon-summary kasbon-summary-red">
+              <span>Total Kasbon</span>
+              <strong>${money(row.totalKasbon)}</strong>
+            </div>
+
+            <div class="kasbon-summary kasbon-summary-green">
+              <span>Total Setoran</span>
+              <strong>${money(row.totalSetoran)}</strong>
+            </div>
+
+            <div class="kasbon-summary kasbon-summary-gold">
+              <span>Sisa</span>
+              <strong>${money(row.remaining)}</strong>
+            </div>
+
+            <div class="kasbon-summary kasbon-summary-status">
+              <span>Status</span>
+              <strong>${statusBadge(row.status)}</strong>
+            </div>
+
+          </div>
+
+          <div class="kasbon-table-wrap">
+
+            <table class="kasbon-person-table">
+
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Jenis</th>
+                  <th>Nominal</th>
+                  <th>Keterangan</th>
+                  <th>Dicatat Oleh</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                ${rows}
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+      `;
+
+    });
+
+    if (!memberTables) {
+      memberTables = `
+        <div class="kasbon-empty-state">
+          <div class="kasbon-empty-icon">◇</div>
+          <strong>Belum ada kasbon</strong>
+          <span>
+            Belum ada member yang memiliki data kasbon.
+          </span>
+        </div>
+      `;
+    }
+
+    document
+      .getElementById('content')
+      .innerHTML = `
+
+      <div class="kasbon-page-head">
+
+        <div>
+          <div class="section-title" style="margin-top:0">
+            KASBON & SETORAN
+          </div>
+
+          <div class="kasbon-page-subtitle">
+            Kelola transaksi berdasarkan masing-masing member.
+          </div>
+        </div>
+
+        <div class="kasbon-person-count">
+          <strong>${activeBalances.length}</strong>
+          <span>MEMBER KASBON</span>
+        </div>
+
+      </div>
+
+      <div class="grid grid-2">
+
+        <div class="card kasbon-form-card">
+
+          <div class="section-title" style="margin-top:0">
+            CATAT KASBON
+          </div>
+
+          <div class="field">
+            <label>Member</label>
+
+            <select id="kasbonMember">
+              ${kasbonOptions || `
+                <option value="" disabled selected>
+                  Belum ada member
+                </option>
+              `}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Nominal</label>
+
+            <input
+              id="kasbonAmount"
+              type="number"
+              min="1"
+              placeholder="0"
+            >
+          </div>
+
+          <div class="field">
+            <label>Keterangan</label>
+
+            <textarea id="kasbonNote"></textarea>
+          </div>
+
+          <button
+            class="btn btn-red"
+            onclick="submitKasbon()"
+            type="button"
+          >
+            SIMPAN KASBON
+          </button>
+
+        </div>
+
+        <div class="card kasbon-form-card">
+
+          <div class="section-title" style="margin-top:0">
+            CATAT SETORAN
+          </div>
+
+          <div class="field">
+            <label>Member</label>
+
+            <select
+              id="setoranMember"
+              onchange="updateSetoranLimit()"
+            >
+              ${setoranOptions}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Nominal</label>
+
+            <input
+              id="setoranAmount"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="0"
+              oninput="validateSetoranAmount()"
+            >
+
+            <div id="setoranLimit" class="field-hint"></div>
+          </div>
+
+          <div class="field">
+            <label>Keterangan</label>
+
+            <textarea id="setoranNote"></textarea>
+          </div>
+
+          <button
+            id="setoranButton"
+            class="btn btn-green"
+            onclick="submitSetoran()"
+            type="button"
+          >
+            SIMPAN SETORAN
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="kasbon-list-head">
+        <div>
+          <div class="section-title" style="margin:0">
+            DATA PER MEMBER
+          </div>
+          <div class="kasbon-list-desc">
+            Setiap member memiliki tabel transaksi sendiri.
+          </div>
+        </div>
+      </div>
+
+      <div class="kasbon-person-list">
+        ${memberTables}
+      </div>
+
+    `;
+
+    updateSetoranLimit();
+
+  })
+  .catch(handleServerError);
+
+}
+
+
+function focusKasbonMember(memberId) {
+
+  const select = document.getElementById('kasbonMember');
+
+  if (!select) return;
+
+  select.value = String(memberId);
+
+  const amount = document.getElementById('kasbonAmount');
+
+  if (amount) {
+    amount.focus();
+    amount.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }
+
+}
+
+
+function focusSetoranMember(memberId) {
+
+  const select = document.getElementById('setoranMember');
+
+  if (!select) return;
+
+  select.value = String(memberId);
+  updateSetoranLimit();
+
+  const amount = document.getElementById('setoranAmount');
+
+  if (amount) {
+    amount.focus();
+    amount.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }
+
+}
+
+
+function deleteKasbonPerson(memberId) {
+
+  const balances = window.__KASBON_BALANCES || [];
+
+  const row = balances.find(function(item) {
+    return String(item.memberId) === String(memberId);
+  });
+
+  const memberName =
+    row && row.memberName
+      ? row.memberName
+      : 'member ini';
+
+  if (!confirm(
+    'Hapus seluruh tabel Kasbon & Setoran untuk "' +
+    memberName +
+    '"?\n\n' +
+    'Semua transaksi kasbon dan setoran milik member ini akan dihapus dari sheet. ' +
+    'Tindakan ini tidak dapat dibatalkan.'
+  )) {
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message || 'Data kasbon berhasil dihapus.',
+        'success'
+      );
+
+      loadKasbonPage();
+
+    })
+    .withFailureHandler(handleServerError)
+    .deleteKasbonPerson(
+      TOKEN,
+      memberId
+    );
+
+}
+
+
+function submitKasbon() {
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        'Kasbon berhasil.',
+        'success'
+      );
+
+      loadKasbonPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .addKasbon(
+      TOKEN,
+      document.getElementById('kasbonMember').value,
+      document.getElementById('kasbonAmount').value,
+      document.getElementById('kasbonNote').value,
+      USER.nama
+    );
+
+}
+
+
+function updateSetoranLimit() {
+  const select = document.getElementById('setoranMember');
+  const amount = document.getElementById('setoranAmount');
+  const hint = document.getElementById('setoranLimit');
+  const button = document.getElementById('setoranButton');
+
+  if (!select || !amount || !hint || !button) return;
+
+  const option = select.options[select.selectedIndex];
+  const remaining = Number(option && option.dataset.remaining) || 0;
+
+  amount.max = remaining > 0 ? String(remaining) : '';
+  hint.textContent = remaining > 0
+    ? 'Maksimal setoran: ' + money(remaining)
+    : 'Tidak ada sisa kasbon.';
+
+  validateSetoranAmount();
+}
+
+function validateSetoranAmount() {
+  const select = document.getElementById('setoranMember');
+  const amount = document.getElementById('setoranAmount');
+  const button = document.getElementById('setoranButton');
+
+  if (!select || !amount || !button) return false;
+
+  const option = select.options[select.selectedIndex];
+  const remaining = Number(option && option.dataset.remaining) || 0;
+  const value = Number(amount.value) || 0;
+
+  const valid = remaining > 0 && value > 0 && value <= remaining;
+  button.disabled = !valid;
+
+  if (value > remaining && remaining > 0) {
+    amount.setCustomValidity('Nominal melebihi sisa kasbon.');
+  } else {
+    amount.setCustomValidity('');
+  }
+
+  return valid;
+}
+
+function submitSetoran() {
+
+  if (!validateSetoranAmount()) {
+    toast('Nominal setoran melebihi sisa kasbon atau belum diisi.', 'error');
+    return;
+  }
+
+  const button = document.getElementById('setoranButton');
+  button.disabled = true;
+  button.textContent = 'MENYIMPAN...';
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      toast(
+        result.message || 'Setoran berhasil.',
+        'success'
+      );
+      loadKasbonPage();
+    })
+    .withFailureHandler(function(err) {
+      button.disabled = false;
+      button.textContent = 'SIMPAN SETORAN';
+      handleServerError(err);
+      loadKasbonPage();
+    })
+    .addSetoran(
+      TOKEN,
+      document.getElementById('setoranMember').value,
+      document.getElementById('setoranAmount').value,
+      document.getElementById('setoranNote').value,
+      USER.nama
+    );
+
+}
+
+
+
+/* =====================================================
+   LAPORAN KEUANGAN
+===================================================== */
+
+function loadFinancePage() {
+
+  runPromise('getKeuanganReport', [TOKEN])
+    .then(function(report) {
+      FINANCE_REPORT = report || {
+        saldo: 0,
+        history: []
+      };
+      renderKeuanganPage(FINANCE_REPORT);
+    })
+    .catch(handleServerError);
+}
+
+function renderKeuanganPage(report) {
+
+  const saldo = Number(report.saldo) || 0;
+  const history = report.history || [];
+
+  let rows = '';
+
+  history.forEach(function(row) {
+
+    const isIn = row.jenis === 'UANG MASUK';
+
+    rows += `
+      <tr>
+        <td>${escapeHTML(row.tanggal || '-')}</td>
+        <td>
+          <span class="finance-type ${isIn ? 'finance-in-badge' : 'finance-out-badge'}">
+            ${escapeHTML(row.jenis)}
+          </span>
+        </td>
+        <td class="${isIn ? 'finance-in' : 'finance-out'}">
+          ${money(row.nominal)}
+        </td>
+        <td>${escapeHTML(row.keterangan || '-')}</td>
+        <td>${escapeHTML(row.inputOleh || '-')}</td>
+        ${String(USER.role).toUpperCase() === 'ADMIN'
+          ? `<td><button class="btn btn-muted finance-delete-btn" onclick="deleteKeuangan('${escapeAttr(row.id)}')">HAPUS</button></td>`
+          : ''}
+      </tr>
+    `;
+  });
+
+  const admin = String(USER.role).toUpperCase() === 'ADMIN';
+
+  document.getElementById('content').innerHTML = `
+    <div class="keuangan-page">
+
+      <section class="keuangan-balance">
+        <div class="keuangan-balance-label">SALDO SAAT INI</div>
+        <div class="keuangan-balance-value">${money(saldo)}</div>
+        <div class="keuangan-balance-period">
+          PERIODE ${escapeHTML(report.period || '')}
+          ${report.resetAt ? ' • RESET ' + escapeHTML(report.resetAt) : ''}
+        </div>
+      </section>
+
+      <section class="card keuangan-form-card">
+        <div class="section-title" style="margin-top:0">
+          TRANSAKSI KEUANGAN
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label>JENIS TRANSAKSI</label>
+            <select id="financeType">
+              <option value="UANG MASUK">UANG MASUK</option>
+              <option value="UANG KELUAR">UANG KELUAR</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>NOMINAL</label>
+            <input id="financeAmount" type="number" min="1" step="1" placeholder="0">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>KETERANGAN</label>
+          <textarea id="financeNote" placeholder="Masukkan keterangan transaksi..."></textarea>
+        </div>
+
+        <button class="btn btn-red" onclick="submitKeuangan()">
+          SIMPAN TRANSAKSI
+        </button>
+      </section>
+
+      <div class="keuangan-tools">
+        ${admin ? `
+          <button class="btn btn-muted" onclick="cekDuplikatKeuangan()">
+            🔎 CEK DATA DUPLIKAT
+          </button>
+          <button class="btn btn-muted" onclick="resetKeuanganBulanIni()">
+            🔄 RESET BULAN INI
+          </button>
+        ` : ''}
+        <button class="btn btn-muted" onclick="loadFinancePage()">
+          ↻ REFRESH
+        </button>
+      </div>
+
+      <div class="section-title">
+        RIWAYAT TRANSAKSI
+      </div>
+
+      <div class="table-wrap">
+        <table class="keuangan-table">
+          <thead>
+            <tr>
+              <th>TANGGAL</th>
+              <th>JENIS</th>
+              <th>NOMINAL</th>
+              <th>KETERANGAN</th>
+              <th>INPUT OLEH</th>
+              ${admin ? '<th>AKSI</th>' : ''}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows || `
+              <tr>
+                <td colspan="${admin ? 6 : 5}">
+                  <div class="empty">BELUM ADA TRANSAKSI.</div>
+                </td>
+              </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="keuanganDuplicateBox"></div>
+
+    </div>
+  `;
+}
+
+function submitKeuangan() {
+
+  const type = document.getElementById('financeType').value;
+  const amount = document.getElementById('financeAmount').value;
+  const note = document.getElementById('financeNote').value;
+
+  if (!amount || Number(amount) <= 0) {
+    toast('Nominal harus lebih dari 0.', 'error');
+    return;
+  }
+
+  if (!String(note || '').trim()) {
+    toast('Keterangan wajib diisi.', 'error');
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      toast(result.message || 'Transaksi berhasil disimpan.', 'success');
+      loadFinancePage();
+    })
+    .withFailureHandler(handleServerError)
+    .addKeuanganTransaction(
+      TOKEN,
+      type,
+      amount,
+      note
+    );
+}
+
+function deleteKeuangan(id) {
+
+  if (!confirm(
+    'Hapus transaksi ' + id + '?\\n\\nTindakan ini akan mengubah saldo.'
+  )) {
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      toast(result.message || 'Transaksi berhasil dihapus.', 'success');
+      loadFinancePage();
+    })
+    .withFailureHandler(handleServerError)
+    .deleteKeuanganTransaction(TOKEN, id);
+}
+
+function resetKeuanganBulanIni() {
+
+  if (!confirm(
+    'RESET LAPORAN BULAN INI?\\n\\n' +
+    'Data transaksi lama TIDAK dihapus. ' +
+    'Saldo periode baru akan dimulai dari Rp0.'
+  )) {
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      toast(result.message || 'Laporan berhasil di-reset.', 'success');
+      loadFinancePage();
+    })
+    .withFailureHandler(handleServerError)
+    .resetKeuanganBulanIni(TOKEN);
+}
+
+function cekDuplikatKeuangan() {
+
+  const box = document.getElementById('keuanganDuplicateBox');
+
+  if (box) {
+    box.innerHTML = '<div class="card"><div class="empty">MEMERIKSA DATA...</div></div>';
+  }
+
+  google.script.run
+    .withSuccessHandler(function(list) {
+
+      list = list || [];
+
+      if (!box) return;
+
+      if (!list.length) {
+        box.innerHTML = `
+          <div class="card duplicate-clean">
+            <strong>✓ TIDAK ADA KANDIDAT DUPLIKAT</strong>
+            <div>Semua transaksi yang diperiksa tidak menunjukkan pasangan yang sama.</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div class="card duplicate-card">
+          <div class="section-title" style="margin-top:0">
+            ⚠ KANDIDAT DATA DUPLIKAT
+          </div>
+          <div class="duplicate-note">
+            Sistem hanya menandai data yang sama jenis, nominal, keterangan,
+            input oleh, dan tercatat dalam rentang 24 jam. Kamu tetap menentukan
+            transaksi mana yang benar-benar salah.
+          </div>
+      `;
+
+      list.forEach(function(pair, index) {
+
+        function duplicateRow(item) {
+          return `
+            <div class="duplicate-row">
+              <div>
+                <strong>${escapeHTML(item.id)}</strong>
+                <span>${escapeHTML(item.tanggal)}</span>
+              </div>
+              <div>${escapeHTML(item.jenis)} • ${money(item.nominal)}</div>
+              <div>${escapeHTML(item.keterangan)}</div>
+              <div>${escapeHTML(item.inputOleh)}</div>
+              <button class="btn btn-muted" onclick="deleteKeuangan('${escapeAttr(item.id)}')">
+                HAPUS ${escapeHTML(item.id)}
+              </button>
+            </div>
+          `;
+        }
+
+        html += `
+          <div class="duplicate-pair">
+            <div class="duplicate-pair-title">PASANGAN ${index + 1}</div>
+            ${duplicateRow(pair.first)}
+            ${duplicateRow(pair.second)}
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      box.innerHTML = html;
+    })
+    .withFailureHandler(handleServerError)
+    .getKeuanganDuplicateCandidates(TOKEN);
+}
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+function loadMembersPage() {
+
+  google.script.run
+
+    .withSuccessHandler(function(members) {
+
+      CURRENT_MEMBERS =
+        members || [];
+
+      let rows = '';
+
+      members.forEach(function(member) {
+
+        rows += `
+          <tr>
+
+            <td>
+              <b>${escapeHTML(member.id)}</b>
+            </td>
+
+            <td>
+              ${escapeHTML(member.name)}
+            </td>
+
+            <td>
+              ${escapeHTML(member.rank || '-')}
+            </td>
+
+            <td>
+              ${statusBadge(member.status)}
+            </td>
+
+            <td>
+              ${number(member.totalTransactions)}
+            </td>
+
+            <td>
+              ${number(member.totalQty)}
+            </td>
+
+            <td>
+
+              <button
+                class="btn btn-muted"
+                style="padding:7px 9px;font-size:9px"
+                onclick='openEditMemberModal(${JSON.stringify(member)})'
+              >
+                EDIT
+              </button>
+
+              <button
+                class="btn ${member.status === 'ACTIVE' ? 'btn-danger' : 'btn-green'}"
+                style="padding:7px 9px;font-size:9px"
+                onclick="toggleMemberStatus('${escapeAttr(member.id)}','${member.status}')"
+              >
+                ${member.status === 'ACTIVE'
+                  ? 'NONAKTIFKAN'
+                  : 'AKTIFKAN'}
+              </button>
+
+              ${
+                USER.role === 'ADMIN'
+                ? `
+                  <button
+                    class="btn btn-danger"
+                    style="padding:7px 9px;font-size:9px"
+                    onclick="deleteMemberConfirm('${escapeAttr(member.id)}')"
+                  >
+                    HAPUS
+                  </button>
+                `
+                : ''
+              }
+
+            </td>
+
+          </tr>
+        `;
+
+      });
+
+      document
+        .getElementById('content')
+        .innerHTML = `
+
+        <div style="
+          display:flex;
+          justify-content:flex-end;
+          margin-bottom:15px;
+        ">
+
+          <button
+            class="btn btn-red"
+            onclick="openAddMemberModal()"
+          >
+            + TAMBAH MEMBER
+          </button>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>ID</th>
+                <th>Nama</th>
+                <th>Pangkat</th>
+                <th>Status</th>
+                <th>Transaksi</th>
+                <th>Total Qty</th>
+                <th>Aksi</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${rows || `
+                <tr>
+                  <td colspan="7">
+                    <div class="empty">
+                      Belum ada member.
+                    </div>
+                  </td>
+                </tr>
+              `}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getMembers(TOKEN);
+
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+function loadHistoryPage() {
+
+  Promise.all([
+    getHistoryPromise(),
+    getPickupHistoryPromise()
+  ])
+  .then(function(results) {
+
+    const transactions = results[0];
+    const pickups = results[1];
+
+    let rows = '';
+
+    transactions.forEach(function(row) {
+
+      rows += `
+        <tr>
+
+          <td>${escapeHTML(row.timestamp)}</td>
+
+          <td>${escapeHTML(row.type)}</td>
+
+          <td>${escapeHTML(row.itemName)}</td>
+
+          <td>${number(row.qty)}</td>
+
+          <td>${escapeHTML(row.memberName || '-')}</td>
+
+          <td>${escapeHTML(row.staffName || '-')}</td>
+
+          <td>${escapeHTML(row.keterangan || '-')}</td>
+
+        </tr>
+      `;
+
+    });
+
+    document
+      .getElementById('content')
+      .innerHTML = `
+
+      <div class="section-title" style="margin-top:0">
+        TRANSACTION HISTORY
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Waktu</th>
+              <th>Tipe</th>
+              <th>Barang</th>
+              <th>Qty</th>
+              <th>Member</th>
+              <th>Staff</th>
+              <th>Keterangan</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${rows || `
+              <tr>
+                <td colspan="7">
+                  <div class="empty">
+                    Belum ada transaksi.
+                  </div>
+                </td>
+              </tr>
+            `}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <div class="section-title">
+        PICKUP / PENGAMBILAN
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Waktu</th>
+              <th>Member</th>
+              <th>Barang</th>
+              <th>Qty</th>
+              <th>Staff</th>
+              <th>Status</th>
+              <th>Aksi</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${pickups.map(function(row) {
+
+              return `
+                <tr>
+
+                  <td>${escapeHTML(row.timestamp)}</td>
+
+                  <td>${escapeHTML(row.memberName)}</td>
+
+                  <td>${escapeHTML(row.itemName)}</td>
+
+                  <td>${number(row.qty)}</td>
+
+                  <td>${escapeHTML(row.staffName)}</td>
+
+                  <td>${statusBadge(row.status)}</td>
+
+                  <td>
+
+                    ${
+                      row.status === 'PENDING'
+                      ? `
+                        <button
+                          class="btn btn-green"
+                          style="padding:7px 9px;font-size:9px"
+                          onclick="processPickup('${escapeAttr(row.id)}')"
+                        >
+                          PROSES
+                        </button>
+
+                        <button
+                          class="btn btn-danger"
+                          style="padding:7px 9px;font-size:9px"
+                          onclick="cancelPickup('${escapeAttr(row.id)}')"
+                        >
+                          BATAL
+                        </button>
+                      `
+                      : '-'
+                    }
+
+                  </td>
+
+                </tr>
+              `;
+
+            }).join('')}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+  })
+  .catch(handleServerError);
+
+}
+
+
+function processPickup(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      toast(
+        'Pickup berhasil diproses.',
+        'success'
+      );
+
+      loadHistoryPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .updatePickupStatus(
+      TOKEN,
+      id,
+      'PROCESSED'
+    );
+
+}
+
+
+function cancelPickup(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      toast(
+        'Pickup dibatalkan.',
+        'success'
+      );
+
+      loadHistoryPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .updatePickupStatus(
+      TOKEN,
+      id,
+      'CANCELLED'
+    );
+
+}
+
+
+/* =====================================================
+   ACCOUNTS
+===================================================== */
+
+function loadAccountsPage() {
+
+  google.script.run
+
+    .withSuccessHandler(function(users) {
+
+      CURRENT_USERS =
+        users || [];
+
+      let rows = '';
+
+      users.forEach(function(user) {
+
+        rows += `
+          <tr>
+
+            <td>
+              ${escapeHTML(user.nama)}
+            </td>
+
+            <td>
+              ${escapeHTML(user.username)}
+            </td>
+
+            <td>
+              ${escapeHTML(user.role)}
+            </td>
+
+            <td>
+              ${statusBadge(user.status)}
+            </td>
+
+            <td>
+              ${escapeHTML(user.memberId || '-')}
+            </td>
+
+            <td>
+
+              <button
+                class="btn btn-muted"
+                style="padding:7px 9px;font-size:9px"
+                onclick='openEditUserModal(${JSON.stringify(user)})'
+              >
+                EDIT
+              </button>
+
+              <button
+                class="btn btn-gold"
+                style="padding:7px 9px;font-size:9px"
+                onclick="openResetPasswordModal('${escapeAttr(user.id)}','${escapeAttr(user.nama)}')"
+              >
+                PASSWORD
+              </button>
+
+              <button
+                class="btn btn-danger"
+                style="padding:7px 9px;font-size:9px"
+                onclick="deleteUserConfirm('${escapeAttr(user.id)}')"
+              >
+                HAPUS
+              </button>
+
+            </td>
+
+          </tr>
+        `;
+
+      });
+
+      document
+        .getElementById('content')
+        .innerHTML = `
+
+        <div style="
+          display:flex;
+          justify-content:flex-end;
+          margin-bottom:15px;
+        ">
+
+          <button
+            class="btn btn-red"
+            onclick="openAddUserModal()"
+          >
+            + BUAT AKUN
+          </button>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Nama</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Member ID</th>
+                <th>Aksi</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${rows || `
+                <tr>
+                  <td colspan="6">
+                    <div class="empty">
+                      Belum ada akun.
+                    </div>
+                  </td>
+                </tr>
+              `}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getUsers(TOKEN);
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+function loadProfilePage() {
+
+  google.script.run
+
+    .withSuccessHandler(function(profile) {
+
+      document
+        .getElementById('content')
+        .innerHTML = `
+
+        <div class="grid grid-2">
+
+          <div class="card">
+
+            <div class="section-title" style="margin-top:0">
+              PROFIL
+            </div>
+
+            <div class="field">
+
+              <label>Nama</label>
+
+              <input
+                value="${escapeAttr(profile.nama)}"
+                disabled
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Username</label>
+
+              <input
+                value="${escapeAttr(profile.username)}"
+                disabled
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Role</label>
+
+              <input
+                value="${escapeAttr(profile.role)}"
+                disabled
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Member ID</label>
+
+              <input
+                value="${escapeAttr(profile.memberId || '-')}"
+                disabled
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="section-title" style="margin-top:0">
+              GANTI PASSWORD
+            </div>
+
+            <div class="field">
+
+              <label>Password Lama</label>
+
+              <input
+                id="oldPassword"
+                type="password"
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Password Baru</label>
+
+              <input
+                id="newPassword"
+                type="password"
+              >
+
+            </div>
+
+            <div class="field">
+
+              <label>Konfirmasi Password</label>
+
+              <input
+                id="confirmPassword"
+                type="password"
+              >
+
+            </div>
+
+            <button
+              class="btn btn-red"
+              onclick="changePassword()"
+            >
+              GANTI PASSWORD
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .getMyProfile(TOKEN);
+
+}
+
+
+function changePassword() {
+
+  const oldPassword =
+    document.getElementById(
+      'oldPassword'
+    ).value;
+
+  const newPassword =
+    document.getElementById(
+      'newPassword'
+    ).value;
+
+  const confirm =
+    document.getElementById(
+      'confirmPassword'
+    ).value;
+
+  if (newPassword !== confirm) {
+
+    toast(
+      'Konfirmasi password tidak sama.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        'Password berhasil diubah.',
+        'success'
+      );
+
+      document
+        .getElementById('oldPassword')
+        .value = '';
+
+      document
+        .getElementById('newPassword')
+        .value = '';
+
+      document
+        .getElementById('confirmPassword')
+        .value = '';
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .changeMyPassword(
+      TOKEN,
+      oldPassword,
+      newPassword
+    );
+
+}
+
+
+/* =====================================================
+   MODAL ITEM
+===================================================== */
+
+function openAddItemModal() {
+
+  openModal(
+    'TAMBAH BARANG',
+    `
+
+      <div class="field">
+
+        <label>Nama Barang</label>
+
+        <input
+          id="modalItemName"
+          placeholder="Nama barang"
+        >
+
+      </div>
+
+      <div class="grid grid-2">
+
+        <div class="field">
+
+          <label>Harga Mentah</label>
+
+          <input
+            id="modalItemRaw"
+            type="number"
+            min="0"
+            value="0"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>Harga Jual</label>
+
+          <input
+            id="modalItemSell"
+            type="number"
+            min="0"
+            value="0"
+          >
+
+        </div>
+
+      </div>
+
+      <div class="field">
+
+        <label>Minimum Stock</label>
+
+        <input
+          id="modalItemMin"
+          type="number"
+          min="0"
+          value="0"
+        >
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveNewItem()"
+        >
+          SIMPAN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveNewItem() {
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      closeModal();
+
+      toast(
+        result.message ||
+        'Barang berhasil ditambahkan.',
+        'success'
+      );
+
+      loadStockPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .addItem(
+      TOKEN,
+      document.getElementById('modalItemName').value,
+      document.getElementById('modalItemRaw').value,
+      document.getElementById('modalItemSell').value,
+      document.getElementById('modalItemMin').value
+    );
+
+}
+
+
+function openEditItemModal(item) {
+
+  openModal(
+    'EDIT BARANG',
+    `
+
+      <div class="field">
+
+        <label>Nama Barang</label>
+
+        <input
+          id="modalEditItemName"
+          value="${escapeAttr(item.name)}"
+        >
+
+      </div>
+
+      <div class="grid grid-2">
+
+        <div class="field">
+
+          <label>Harga Mentah</label>
+
+          <input
+            id="modalEditItemRaw"
+            type="number"
+            value="${item.hargaMentah}"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>Harga Jual</label>
+
+          <input
+            id="modalEditItemSell"
+            type="number"
+            value="${item.hargaJual}"
+          >
+
+        </div>
+
+      </div>
+
+      <div class="field">
+
+        <label>Minimum Stock</label>
+
+        <input
+          id="modalEditItemMin"
+          type="number"
+          value="${item.minimum}"
+        >
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveEditItem('${escapeAttr(item.id)}')"
+        >
+          SIMPAN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveEditItem(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      closeModal();
+
+      toast(
+        result.message ||
+        'Barang diperbarui.',
+        'success'
+      );
+
+      loadStockPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .updateItem(
+      TOKEN,
+      id,
+      document.getElementById('modalEditItemName').value,
+      document.getElementById('modalEditItemRaw').value,
+      document.getElementById('modalEditItemSell').value,
+      document.getElementById('modalEditItemMin').value
+    );
+
+}
+
+
+/* =====================================================
+   MEMBER MODAL
+===================================================== */
+
+function openAddMemberModal() {
+
+  openModal(
+    'TAMBAH MEMBER',
+    `
+
+      <div class="field">
+
+        <label>Nama</label>
+
+        <input
+          id="modalMemberName"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Role / Pangkat</label>
+
+        <select id="modalMemberRank">
+
+          <option value="MAGANG">MAGANG</option>
+          <option value="STAFF">STAFF</option>
+          <option value="ADMIN">ADMIN</option>
+
+        </select>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveNewMember()"
+        >
+          SIMPAN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveNewMember() {
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      closeModal();
+
+      toast(
+        'Member berhasil dibuat.',
+        'success'
+      );
+
+      loadMembersPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .addMember(
+      TOKEN,
+      document.getElementById('modalMemberName').value,
+      document.getElementById('modalMemberRank').value
+    );
+
+}
+
+
+function openEditMemberModal(member) {
+
+  openModal(
+    'EDIT MEMBER',
+    `
+
+      <div class="field">
+
+        <label>Member ID</label>
+
+        <input
+          value="${escapeAttr(member.id)}"
+          disabled
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Nama</label>
+
+        <input
+          id="modalEditMemberName"
+          value="${escapeAttr(member.name)}"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Role / Pangkat</label>
+
+        <select id="modalEditMemberRank">
+
+          <option value="MAGANG" ${String(member.rank || '').toUpperCase() === 'MAGANG' ? 'selected' : ''}>MAGANG</option>
+          <option value="STAFF" ${String(member.rank || '').toUpperCase() === 'STAFF' ? 'selected' : ''}>STAFF</option>
+          <option value="ADMIN" ${String(member.rank || '').toUpperCase() === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
+
+        </select>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveEditMember('${escapeAttr(member.id)}')"
+        >
+          SIMPAN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveEditMember(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      closeModal();
+
+      toast(
+        'Member diperbarui.',
+        'success'
+      );
+
+      loadMembersPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .updateMember(
+      TOKEN,
+      id,
+      document.getElementById('modalEditMemberName').value,
+      document.getElementById('modalEditMemberRank').value
+    );
+
+}
+
+
+function toggleMemberStatus(
+  id,
+  current
+) {
+
+  const next =
+    current === 'ACTIVE'
+      ? 'INACTIVE'
+      : 'ACTIVE';
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      toast(
+        'Status member diperbarui.',
+        'success'
+      );
+
+      loadMembersPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .setMemberStatus(
+      TOKEN,
+      id,
+      next
+    );
+
+}
+
+
+function deleteMemberConfirm(id) {
+
+  if (
+    !confirm(
+      'Yakin ingin menghapus member ini?'
+    )
+  ) {
+    return;
+  }
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      toast(
+        'Member berhasil dihapus.',
+        'success'
+      );
+
+      loadMembersPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .deleteMember(
+      TOKEN,
+      id
+    );
+
+}
+
+
+/* =====================================================
+   USER MODAL
+===================================================== */
+
+function openAddUserModal() {
+
+  const memberOptions =
+    CURRENT_MEMBERS
+      .filter(m => m.status === 'ACTIVE')
+      .map(function(member) {
+
+        return `
+          <option value="${escapeAttr(member.id)}">
+            ${escapeHTML(member.name)}
+          </option>
+        `;
+
+      })
+      .join('');
+
+  openModal(
+    'BUAT AKUN',
+    `
+
+      <div class="field">
+
+        <label>Nama</label>
+
+        <input
+          id="modalUserName"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Username</label>
+
+        <input
+          id="modalUserUsername"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Password</label>
+
+        <input
+          id="modalUserPassword"
+          type="password"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Role</label>
+
+        <select id="modalUserRole">
+
+          <option value="MANAGER">
+            MANAGER
+          </option>
+
+          <option value="MANAGER">
+            MANAGER
+          </option>
+
+          <option value="STAFF">
+            STAFF
+          </option>
+
+          <option value="MAGANG">
+            MAGANG
+          </option>
+
+          <option value="ADMIN">
+            ADMIN
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>Member ID</label>
+
+        <select id="modalUserMember">
+
+          <option value="">
+            Tidak terhubung
+          </option>
+
+          ${memberOptions}
+
+        </select>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveNewUser()"
+        >
+          BUAT AKUN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveNewUser() {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      closeModal();
+
+      toast(
+        'Akun berhasil dibuat.',
+        'success'
+      );
+
+      loadAccountsPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .createUser(
+      TOKEN,
+      document.getElementById('modalUserName').value,
+      document.getElementById('modalUserUsername').value,
+      document.getElementById('modalUserPassword').value,
+      document.getElementById('modalUserRole').value,
+      document.getElementById('modalUserMember').value
+    );
+
+}
+
+
+function openEditUserModal(user) {
+
+  const memberOptions =
+    CURRENT_MEMBERS
+      .map(function(member) {
+
+        return `
+          <option
+            value="${escapeAttr(member.id)}"
+            ${member.id === user.memberId ? 'selected' : ''}
+          >
+            ${escapeHTML(member.name)}
+          </option>
+        `;
+
+      })
+      .join('');
+
+  openModal(
+    'EDIT AKUN',
+    `
+
+      <div class="field">
+
+        <label>Nama</label>
+
+        <input
+          id="editUserName"
+          value="${escapeAttr(user.nama)}"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Username</label>
+
+        <input
+          id="editUserUsername"
+          value="${escapeAttr(user.username)}"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Role</label>
+
+        <select id="editUserRole">
+
+          ${[
+            'ADMIN',
+            'MANAGER',
+            'STAFF',
+            ...(String(user.role || '').toUpperCase() === 'MEMBER' ? ['MEMBER'] : []),
+            'MAGANG'
+          ].map(function(role) {
+
+            return `
+              <option
+                value="${role}"
+                ${role === user.role ? 'selected' : ''}
+              >
+                ${role}
+              </option>
+            `;
+
+          }).join('')}
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>Status</label>
+
+        <select id="editUserStatus">
+
+          <option
+            value="ACTIVE"
+            ${user.status === 'ACTIVE' ? 'selected' : ''}
+          >
+            ACTIVE
+          </option>
+
+          <option
+            value="INACTIVE"
+            ${user.status === 'INACTIVE' ? 'selected' : ''}
+          >
+            INACTIVE
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>Member ID</label>
+
+        <select id="editUserMember">
+
+          <option value="">
+            Tidak terhubung
+          </option>
+
+          ${memberOptions}
+
+        </select>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-red"
+          onclick="saveEditUser('${escapeAttr(user.id)}')"
+        >
+          SIMPAN
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveEditUser(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      closeModal();
+
+      toast(
+        'Akun berhasil diperbarui.',
+        'success'
+      );
+
+      loadAccountsPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .updateUser(
+      TOKEN,
+      id,
+      document.getElementById('editUserName').value,
+      document.getElementById('editUserUsername').value,
+      document.getElementById('editUserRole').value,
+      document.getElementById('editUserStatus').value,
+      document.getElementById('editUserMember').value
+    );
+
+}
+
+
+function openResetPasswordModal(
+  userId,
+  name
+) {
+
+  openModal(
+    'RESET PASSWORD',
+    `
+
+      <div style="
+        color:#888;
+        font-size:11px;
+        margin-bottom:18px;
+      ">
+        Reset password untuk
+        <b style="color:white">
+          ${escapeHTML(name)}
+        </b>
+      </div>
+
+      <div class="field">
+
+        <label>Password Baru</label>
+
+        <input
+          id="resetPassword"
+          type="password"
+        >
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-muted"
+          onclick="closeModal()"
+        >
+          BATAL
+        </button>
+
+        <button
+          class="btn btn-gold"
+          onclick="saveResetPassword('${escapeAttr(userId)}')"
+        >
+          RESET PASSWORD
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+function saveResetPassword(id) {
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      closeModal();
+
+      toast(
+        result.message ||
+        'Password berhasil direset.',
+        'success'
+      );
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .resetUserPassword(
+      TOKEN,
+      id,
+      document.getElementById('resetPassword').value
+    );
+
+}
+
+
+function deleteUserConfirm(id) {
+
+  if (
+    !confirm(
+      'Yakin ingin menghapus akun ini?'
+    )
+  ) {
+    return;
+  }
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      toast(
+        'Akun berhasil dihapus.',
+        'success'
+      );
+
+      loadAccountsPage();
+
+    })
+
+    .withFailureHandler(handleServerError)
+
+    .deleteUser(
+      TOKEN,
+      id
+    );
+
+}
+
+
+/* =====================================================
+   PARTNERSHIP
+===================================================== */
+
+let CURRENT_PARTNERS = [];
+let CURRENT_PARTNER = null;
+
+function loadPartnershipPage() {
+  google.script.run
+    .withSuccessHandler(function(partners) {
+      CURRENT_PARTNERS = partners || [];
+      renderPartnershipPage_();
+    })
+    .withFailureHandler(handleServerError)
+    .getPartners(TOKEN);
+}
+
+function renderPartnershipPage_() {
+  let list = '';
+  CURRENT_PARTNERS.forEach(function(partner) {
+    const active = CURRENT_PARTNER && CURRENT_PARTNER.id === partner.id ? ' active' : '';
+    list += `<button class="card partner-card${active}" onclick="selectPartner('${escapeAttr(partner.id)}')">
+      <div class="partner-name">${escapeHTML(partner.name)}</div>
+      <div class="partner-meta">${escapeHTML(partner.status)} • Mulai ${escapeHTML(formatDateSimple_(partner.startDate))}</div>
+    </button>`;
+  });
+  if (!list) list = `<div class="card empty">Belum ada partner. Tambahkan partner sesuai perjanjian kerja sama.</div>`;
+
+  document.getElementById('content').innerHTML = `
+    <div class="partnership-toolbar">
+      <div>
+        <div style="font-size:12px;color:#888">DAFTAR PARTNER</div>
+        <div style="font-size:10px;color:#666;margin-top:4px">Partner aktif bisa dipilih untuk mencatat transaksi dua arah.</div>
+      </div>
+      <button class="btn btn-red" onclick="openAddPartnerModal()">+ TAMBAH PARTNER</button>
+    </div>
+    <div class="partnership-list">${list}</div>
+    ${CURRENT_PARTNER ? partnershipDetailHTML_(CURRENT_PARTNER) : `
+      <div class="card empty">Pilih partner untuk melihat dan mencatat Partnership.</div>
+    `}`;
+}
+
+function formatDateSimple_(value) {
+  if (!value) return '-';
+  const p = String(value).split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : value;
+}
+
+function selectPartner(id) {
+  const partner = CURRENT_PARTNERS.find(function(p) { return String(p.id) === String(id); });
+  if (!partner) return;
+  CURRENT_PARTNER = partner;
+  renderPartnershipPage_();
+  refreshPartnerPurchases_();
+}
+
+function partnershipDetailHTML_(partner) {
+  const disabled = String(partner.status).toUpperCase() === 'NONAKTIF' ? 'disabled' : '';
+  return `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <div style="font-size:17px;font-weight:900">${escapeHTML(partner.name)}</div>
+          <div style="font-size:9px;color:#888;margin-top:5px">PARTNER ID: ${escapeHTML(partner.id)} • MULAI: ${escapeHTML(formatDateSimple_(partner.startDate))}</div>
+          ${partner.note ? `<div style="font-size:10px;color:#777;margin-top:6px">${escapeHTML(partner.note)}</div>` : ''}
+        </div>
+        <div style="display:flex;gap:7px">
+          ${statusBadge(partner.status)}
+          <button class="btn btn-muted" style="padding:7px 10px;font-size:9px" onclick="openEditPartnerModal('${escapeAttr(partner.id)}')">EDIT</button>
+          <button class="btn btn-danger" style="padding:7px 10px;font-size:9px" onclick="deletePartnerConfirm('${escapeAttr(partner.id)}')">HAPUS</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:15px">
+      <div class="partnership-direction">
+        <h3>📦 PEMBELIAN KITA <span style="color:#777;font-weight:400">— barang dari partner</span></h3>
+        <div class="grid grid-2">
+          <div class="field"><label>Nama Barang</label><input id="pbItem" placeholder="Contoh: Air Mineral" ${disabled}></div>
+          <div class="field"><label>Jumlah</label><input id="pbQty" type="number" min="1" placeholder="0" ${disabled}></div>
+          <div class="field"><label>Tanggal</label><input id="pbDate" type="date" ${disabled}></div>
+          <div class="field"><label>Keterangan</label><input id="pbNote" placeholder="Opsional" ${disabled}></div>
+        </div>
+        <button class="btn btn-red" onclick="savePartnerPurchase('BUY')" ${disabled}>SIMPAN PEMBELIAN KITA</button>
+        <div id="partnerBuyHistory" style="margin-top:14px"></div>
+      </div>
+
+      <div class="partnership-direction">
+        <h3>🛒 PEMBELIAN MEREKA <span style="color:#777;font-weight:400">— barang dari Crimson Heritage</span></h3>
+        <div class="grid grid-2">
+          <div class="field"><label>Nama Item Crimson Heritage</label><input id="psItem" placeholder="Contoh: Produk A" ${disabled}></div>
+          <div class="field"><label>Jumlah</label><input id="psQty" type="number" min="1" placeholder="0" ${disabled}></div>
+          <div class="field"><label>Tanggal</label><input id="psDate" type="date" ${disabled}></div>
+          <div class="field"><label>Keterangan</label><input id="psNote" placeholder="Opsional" ${disabled}></div>
+        </div>
+        <button class="btn btn-gold" onclick="savePartnerPurchase('SELL')" ${disabled}>SIMPAN PEMBELIAN MEREKA</button>
+        <div id="partnerSellHistory" style="margin-top:14px"></div>
+      </div>
+    </div>`;
+}
+
+function refreshPartnerPurchases_() {
+  if (!CURRENT_PARTNER) return;
+  google.script.run.withSuccessHandler(function(data) {
+    const buy = data && data.buy ? data.buy : [];
+    const sell = data && data.sell ? data.sell : [];
+    const buyEl = document.getElementById('partnerBuyHistory');
+    const sellEl = document.getElementById('partnerSellHistory');
+    if (buyEl) buyEl.innerHTML = purchaseHistoryHTML_(buy, 'Belum ada pembelian kita.');
+    if (sellEl) sellEl.innerHTML = purchaseHistoryHTML_(sell, 'Belum ada pembelian mereka.');
+  }).withFailureHandler(handleServerError).getPartnershipPurchases(TOKEN, CURRENT_PARTNER.id);
+}
+
+function purchaseHistoryHTML_(rows, emptyText) {
+  if (!rows.length) return `<div style="font-size:9px;color:#666;padding:10px 0">${emptyText}</div>`;
+  return `<div class="table-wrap"><table style="min-width:520px"><thead><tr><th>Item</th><th>Qty</th><th>Tanggal</th><th>Keterangan</th></tr></thead><tbody>` +
+    rows.map(function(r) { return `<tr><td>${escapeHTML(r.itemName)}</td><td>${number(r.qty)}</td><td>${escapeHTML(r.date)}</td><td>${escapeHTML(r.note || '-')}</td></tr>`; }).join('') +
+    `</tbody></table></div>`;
+}
+
+function savePartnerPurchase(direction) {
+  if (!CURRENT_PARTNER) return;
+  const prefix = direction === 'BUY' ? 'pb' : 'ps';
+  const item = document.getElementById(prefix + 'Item').value;
+  const qty = document.getElementById(prefix + 'Qty').value;
+  const date = document.getElementById(prefix + 'Date').value;
+  const note = document.getElementById(prefix + 'Note').value;
+  google.script.run.withSuccessHandler(function(result) {
+    toast(result.message || 'Data berhasil disimpan.', 'success');
+    ['Item','Qty','Date','Note'].forEach(function(k){ const el=document.getElementById(prefix+k); if(el) el.value=''; });
+    refreshPartnerPurchases_();
+  }).withFailureHandler(handleServerError).addPartnershipPurchase(TOKEN, direction, CURRENT_PARTNER.id, item, qty, date, note);
+}
+
+function openAddPartnerModal() {
+  openModal('TAMBAH PARTNER', `
+    <div class="field"><label>Nama Partner / Bisnis</label><input id="partnerName" placeholder="Contoh: Bisnis A"></div>
+    <div class="field"><label>Tanggal Mulai Partnership</label><input id="partnerStart" type="date"></div>
+    <div class="field"><label>Status</label><select id="partnerStatus"><option value="AKTIF">AKTIF</option><option value="NONAKTIF">NONAKTIF</option></select></div>
+    <div class="field"><label>Catatan Perjanjian</label><textarea id="partnerNote" placeholder="Catatan singkat perjanjian..." ></textarea></div>
+    <div class="modal-actions"><button class="btn btn-muted" onclick="closeModal()">BATAL</button><button class="btn btn-red" onclick="savePartner()">TAMBAH PARTNER</button></div>`);
+}
+
+function savePartner() {
+  google.script.run.withSuccessHandler(function(result) {
+    closeModal(); toast(result.message || 'Partner berhasil ditambahkan.', 'success'); CURRENT_PARTNER = null; loadPartnershipPage();
+  }).withFailureHandler(handleServerError).addPartner(TOKEN,
+    document.getElementById('partnerName').value,
+    document.getElementById('partnerStart').value,
+    document.getElementById('partnerStatus').value,
+    document.getElementById('partnerNote').value);
+}
+
+function openEditPartnerModal(id) {
+  const p = CURRENT_PARTNERS.find(function(x){return x.id===id;});
+  if (!p) return;
+  openModal('EDIT PARTNER', `
+    <div class="field"><label>Nama Partner / Bisnis</label><input id="partnerEditName" value="${escapeAttr(p.name)}"></div>
+    <div class="field"><label>Tanggal Mulai Partnership</label><input id="partnerEditStart" type="date" value="${escapeAttr(p.startDate)}"></div>
+    <div class="field"><label>Status</label><select id="partnerEditStatus"><option value="AKTIF" ${p.status==='AKTIF'?'selected':''}>AKTIF</option><option value="NONAKTIF" ${p.status==='NONAKTIF'?'selected':''}>NONAKTIF</option></select></div>
+    <div class="field"><label>Catatan Perjanjian</label><textarea id="partnerEditNote">${escapeHTML(p.note || '')}</textarea></div>
+    <div class="modal-actions"><button class="btn btn-muted" onclick="closeModal()">BATAL</button><button class="btn btn-red" onclick="saveEditPartner('${escapeAttr(id)}')">SIMPAN</button></div>`);
+}
+
+function saveEditPartner(id) {
+  google.script.run.withSuccessHandler(function(result) {
+    closeModal(); toast(result.message || 'Partner berhasil diperbarui.', 'success');
+    CURRENT_PARTNER = null; loadPartnershipPage();
+  }).withFailureHandler(handleServerError).updatePartner(TOKEN,id,
+    document.getElementById('partnerEditName').value,
+    document.getElementById('partnerEditStart').value,
+    document.getElementById('partnerEditStatus').value,
+    document.getElementById('partnerEditNote').value);
+}
+
+function deletePartnerConfirm(id) {
+  const p = CURRENT_PARTNERS.find(function(x){return x.id===id;});
+  if (!p) return;
+  if (!confirm('Hapus partner "' + p.name + '"? Riwayat pembelian tetap disimpan, tetapi partner tidak lagi muncul di daftar.')) return;
+  google.script.run.withSuccessHandler(function(result) {
+    toast(result.message || 'Partner berhasil dihapus.', 'success'); CURRENT_PARTNER=null; loadPartnershipPage();
+  }).withFailureHandler(handleServerError).deletePartner(TOKEN,id);
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function openModal(
+  title,
+  content
+) {
+
+  document
+    .getElementById('modalTitle')
+    .textContent = title;
+
+  document
+    .getElementById('modalContent')
+    .innerHTML = content;
+
+  document
+    .getElementById('modal')
+    .classList.add('show');
+
+}
+
+
+function closeModal() {
+
+  document
+    .getElementById('modal')
+    .classList.remove('show');
+
+}
+
+
+/* =====================================================
+   PROMISE HELPERS
+===================================================== */
+
+function runPromise(
+  functionName,
+  args
+) {
+
+  return new Promise(function(resolve, reject) {
+
+    let runner =
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject);
+
+    runner[functionName].apply(
+      runner,
+      args
+    );
+
+  });
+
+}
+
+
+function getItemsPromise() {
+
+  return runPromise(
+    'getItemsPublic',
+    [TOKEN]
+  );
+
+}
+
+
+function getMembersPromise() {
+
+  return runPromise(
+    'getMembers',
+    [TOKEN]
+  );
+
+}
+
+
+function getStaffPromise() {
+
+  return runPromise(
+    'getActiveStaff',
+    [TOKEN]
+  );
+
+}
+
+
+function getKasbonPromise() {
+
+  return runPromise(
+    'getKasbonData',
+    [TOKEN]
+  );
+
+}
+
+
+function getKasbonHistoryPromise() {
+
+  return runPromise(
+    'getKasbonHistory',
+    [TOKEN]
+  );
+
+}
+
+
+function getFinanceSummaryPromise() {
+
+  return runPromise(
+    'getFinanceSummaryClient',
+    [TOKEN]
+  );
+
+}
+
+
+function getFinanceHistoryPromise() {
+
+  return runPromise(
+    'getFinanceHistory',
+    [TOKEN]
+  );
+
+}
+
+
+function getHistoryPromise() {
+
+  return runPromise(
+    'getHistory',
+    [TOKEN]
+  );
+
+}
+
+
+function getPickupHistoryPromise() {
+
+  return runPromise(
+    'getPickupHistory',
+    [TOKEN]
+  );
+
+}
+
+
+/* =====================================================
+   FINANCE CLIENT WRAPPER
+===================================================== */
+
+function getFinanceSummaryClient(token) {
+
+  return runPromise(
+    'getDashboard',
+    [token]
+  ).then(function(data) {
+
+    return data.finance || {};
+
+  });
+
+}
+
+
+/* =====================================================
+   UI HELPERS
+===================================================== */
+
+function statCard(
+  label,
+  value,
+  className
+) {
+
+  return `
+    <div class="card">
+
+      <div class="stat-label">
+        ${label}
+      </div>
+
+      <div class="stat-value ${className}">
+        ${value}
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+function itemCard(item) {
+
+  return `
+    <div class="card item-card">
+
+      <div class="item-name">
+        ${escapeHTML(item.name)}
+      </div>
+
+      <div class="item-stock">
+        ${number(item.stock)}
+      </div>
+
+      <div class="item-min">
+        Minimum: ${number(item.minimum)}
+      </div>
+
+      ${statusBadge(item.status)}
+
+    </div>
+  `;
+
+}
+
+
+function statusBadge(status) {
+
+  const value =
+    String(status || '')
+      .toUpperCase();
+
+  let cls = 'available';
+
+  if (
+    value.includes('OUT') ||
+    value === 'INACTIVE' ||
+    value === 'CANCELLED'
+  ) {
+
+    cls = 'out';
+
+  } else if (
+    value.includes('LOW') ||
+    value === 'PENDING' ||
+    value === 'BELUM LUNAS'
+  ) {
+
+    cls = 'low';
+
+  } else if (
+    value === 'ACTIVE' ||
+    value === 'AVAILABLE' ||
+    value === 'LUNAS' ||
+    value === 'PROCESSED' ||
+    value === 'PEMASUKAN'
+  ) {
+
+    cls = 'available';
+
+  } else if (
+    value === 'PENGELUARAN'
+  ) {
+
+    cls = 'out';
+
+  }
+
+  return `
+    <span class="status ${cls}">
+      ${escapeHTML(value || '-')}
+    </span>
+  `;
+
+}
+
+
+function loadingHTML() {
+
+  return `
+    <div class="card">
+
+      <div class="empty">
+        MEMUAT DATA...
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+function toggleSidebar() {
+
+  document
+    .getElementById('sidebar')
+    .classList.toggle('open');
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutApp() {
+
+  google.script.run
+
+    .withSuccessHandler(function() {
+
+      TOKEN = '';
+      USER = null;
+
+      storageRemove_(
+        'CH_TOKEN'
+      );
+
+      showLogin();
+
+    })
+
+    .withFailureHandler(function() {
+
+      TOKEN = '';
+      USER = null;
+
+      storageRemove_(
+        'CH_TOKEN'
+      );
+
+      showLogin();
+
+    })
+
+    .logout(TOKEN);
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer = null;
+
+function toast(
+  message,
+  type
+) {
+
+  const el =
+    document.getElementById(
+      'toast'
+    );
+
+  el.textContent =
+    message;
+
+  el.className =
+    'show ' +
+    (type || '');
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(function() {
+
+      el.className = '';
+
+    }, 3500);
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function handleServerError(err) {
+  const message = getErrorMessage(err);
+
+  if (isSessionError_(message)) {
+    forceLogout_('Sesi berakhir. Silakan login kembali.');
+    return;
+  }
+
+  toast(message || 'Terjadi kesalahan.', 'error');
+}
+
+
+function isSessionError_(message) {
+  const text = String(message || '').toUpperCase();
+  // ACCESS_DENIED bukan berarti session expired.
+  // Jangan logout user hanya karena permission menu/fungsi ditolak.
+  return text.includes('SESSION_REQUIRED') ||
+         text.includes('SESSION_EXPIRED');
+}
+
+function forceLogout_(message) {
+  TOKEN = '';
+  USER = null;
+  storageRemove_('CH_TOKEN');
+  showLogin();
+
+  const error = document.getElementById('loginError');
+  if (error && message) {
+    error.textContent = message;
+    error.style.display = 'block';
+  }
+}
+
+function getErrorMessage(err) {
+
+  if (!err) {
+    return 'Terjadi kesalahan.';
+  }
+
+  if (typeof err === 'string') {
+    return err;
+  }
+
+  return (
+    err.message ||
+    'Terjadi kesalahan pada server.'
+  );
+
+}
+
+
+/* =====================================================
+   FORMATTING
+===================================================== */
+
+function money(value) {
+
+  return 'Rp ' +
+    Number(value || 0)
+      .toLocaleString(
+        'id-ID'
+      );
+
+}
+
+
+function number(value) {
+
+  return Number(value || 0)
+    .toLocaleString(
+      'id-ID'
+    );
+
+}
+
+
+/* =====================================================
+   SECURITY / ESCAPE
+===================================================== */
+
+function escapeHTML(value) {
+
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+function escapeAttr(value) {
+
+  return escapeHTML(value);
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL ON BACKDROP
+===================================================== */
+
+document
+  .getElementById('modal')
+  .addEventListener(
+    'click',
+    function(event) {
+
+      if (
+        event.target === this
+      ) {
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
